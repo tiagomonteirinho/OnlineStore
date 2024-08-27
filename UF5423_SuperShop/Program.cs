@@ -13,7 +13,7 @@ namespace UF5423_SuperShop
     {
         public static void Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            CreateHostBuilder(args).Build().Run(); // adapts to any operating system.
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>

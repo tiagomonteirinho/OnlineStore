@@ -1,0 +1,71 @@
+﻿@model IEnumerable<UF5423_SuperShop.Data.Entities.Product>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductImageUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductLastPurchase)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductLastSale)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductIsAvailable)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductStock)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductPrice)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductImageUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductLastPurchase)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductLastSale)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductIsAvailable)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductStock)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
