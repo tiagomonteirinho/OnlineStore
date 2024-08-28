@@ -10,8 +10,8 @@ using UF5423_SuperShop.Data;
 namespace UF5423_SuperShop.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240827172846_InitDb")]
-    partial class InitDb
+    [Migration("20240828123248_ModifyProducts")]
+    partial class ModifyProducts
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -34,14 +34,16 @@ namespace UF5423_SuperShop.Migrations
                     b.Property<bool>("ProductIsAvailable")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("ProductLastPurchase")
+                    b.Property<DateTime?>("ProductLastPurchase")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("ProductLastSale")
+                    b.Property<DateTime?>("ProductLastSale")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ProductName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(99)
+                        .HasColumnType("nvarchar(99)");
 
                     b.Property<decimal>("ProductPrice")
                         .HasColumnType("decimal(18,2)");

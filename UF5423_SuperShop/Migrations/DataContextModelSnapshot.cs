@@ -26,25 +26,27 @@ namespace UF5423_SuperShop.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ImageUrl")
+                    b.Property<string>("ProductImageUrl")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsAvailable")
+                    b.Property<bool>("ProductIsAvailable")
                         .HasColumnType("bit");
 
-                    b.Property<DateTime>("LastPurchase")
+                    b.Property<DateTime?>("ProductLastPurchase")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("LastSale")
+                    b.Property<DateTime?>("ProductLastSale")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("ProductName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(99)
+                        .HasColumnType("nvarchar(99)");
 
                     b.Property<decimal>("ProductPrice")
                         .HasColumnType("decimal(18,2)");
 
-                    b.Property<double>("Stock")
+                    b.Property<double>("ProductStock")
                         .HasColumnType("float");
 
                     b.HasKey("ProductId");
