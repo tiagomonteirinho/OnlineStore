@@ -1,14 +1,9 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using UF5423_SuperShop.Data;
 
 namespace UF5423_SuperShop
@@ -30,6 +25,9 @@ namespace UF5423_SuperShop
                 cfg.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnectionString")); // get connection string from 'appsettings.json'.
             });
 
+            //services.AddSingleton(); // Keep object in memory throughout application run-time.
+            //services.AddScoped(); // Keep object in memory until another of same type is created and replaces it.
+            services.AddTransient<SeedDb>(); // Remove object from memory after completion.
             services.AddControllersWithViews();
         }
 
