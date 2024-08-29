@@ -9,29 +9,28 @@ namespace UF5423_SuperShop.Controllers
 {
     public class ProductsController : Controller
     {
-        private readonly DataContext _context;
+        private readonly IRepository _repository;
 
-        public ProductsController(DataContext context)
+        public ProductsController(IRepository repository)
         {
-            _context = context;
+            _repository = repository;
         }
 
         // GET: Products
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Products.ToListAsync());
+            return View(_repository.GetProducts());
         }
 
         // GET: Products/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public IActionResult Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.ProductId == id);
+            var product = _repository.GetProduct(id.Value);
             if (product == null)
             {
                 return NotFound();
@@ -41,7 +40,7 @@ namespace UF5423_SuperShop.Controllers
         }
 
         // GET: Products/Create
-        public IActionResult Create() // automatically set as create action and view by having action name 'Create' of type IActionResult.
+        public IActionResult Create() // Automatically set as create action and view by having action name 'Create' of type IActionResult.
         {
             return View();
         }
@@ -55,23 +54,23 @@ namespace UF5423_SuperShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
-                await _context.SaveChangesAsync();
-                //return RedirectToAction("Index"); // define custom action name.
+                _repository.UpdateProduct(product);
+                await _repository.SaveAllAsync();
+                //return RedirectToAction("Index"); // Define custom action name.
                 return RedirectToAction(nameof(Index)); // Redirect to products list action.
             }
             return View(product); // Keep input changes even if product is invalid.
         }
 
         // GET: Products/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var product = await _context.Products.FindAsync(id);
+            var product = _repository.GetProduct(id.Value);
             if (product == null)
             {
                 return NotFound();
@@ -95,12 +94,12 @@ namespace UF5423_SuperShop.Controllers
             {
                 try
                 {
-                    _context.Update(product);
-                    await _context.SaveChangesAsync();
+                    _repository.UpdateProduct(product);
+                    await _repository.SaveAllAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ProductExists(product.ProductId))
+                    if (!_repository.ProductExists(product.ProductId))
                     {
                         return NotFound();
                     }
@@ -115,37 +114,31 @@ namespace UF5423_SuperShop.Controllers
         }
 
         // GET: Products/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int? id)
         {
-            if (id == null)
+            if (id == null) // Check if product ID exists.
             {
                 return NotFound();
             }
 
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.ProductId == id);
+            var product = _repository.GetProduct(id.Value);
             if (product == null)
             {
-                return NotFound();
+                return NotFound(); // Check if product exists.
             }
 
-            return View(product); // delete product from memory.
+            return View(product); // Delete product from memory.
         }
 
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")] // Set POST process for action Delete.
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int id) // Ensure product still exists.
         {
-            var product = await _context.Products.FindAsync(id); // check if product still exists.
-            _context.Products.Remove(product); //delete product from data base.
-            await _context.SaveChangesAsync();
+            var product = _repository.GetProduct(id);
+            _repository.RemoveProduct(product); //Delete product from data base.
+            await _repository.SaveAllAsync();
             return RedirectToAction(nameof(Index));
-        }
-
-        private bool ProductExists(int id)
-        {
-            return _context.Products.Any(e => e.ProductId == id);
         }
     }
 }
