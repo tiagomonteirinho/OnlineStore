@@ -19,7 +19,7 @@ namespace UF5423_SuperShop.Controllers
         // GET: Products
         public IActionResult Index()
         {
-            return View(_productRepository.GetAll());
+            return View(_productRepository.GetAll().OrderBy(p => p.Name)); // Unique case of ordering property values.
         }
 
         // GET: Products/Details/5

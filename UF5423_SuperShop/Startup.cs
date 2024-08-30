@@ -22,12 +22,12 @@ namespace UF5423_SuperShop
         {
             services.AddDbContext<DataContext>(cfg =>
             {
-                cfg.UseSqlServer(this.Configuration.GetConnectionString("DefaultConnectionString")); // get connection string from 'appsettings.json'.
+                cfg.UseSqlServer(this.Configuration.GetConnectionString("LocalConnectionString")); // Get connection string from 'appsettings.json'.
             });
 
             //services.AddSingleton(); // Keep object in memory throughout application run-time.
             services.AddTransient<SeedDb>(); // Remove object from memory after completion.
-            services.AddScoped<IProductRepository, ProductRepository>(); // Keep object in memory until another of same type is created and replaces it.
+            services.AddScoped<IProductRepository, ProductRepository>(); // Keep object in memory until another of same type is created and replaces it. // 'ProductRepository': automatically instantiated at 'ProductsController' constructor.
             services.AddControllersWithViews();
         }
 

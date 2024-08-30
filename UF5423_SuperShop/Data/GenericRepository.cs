@@ -7,7 +7,7 @@ namespace UF5423_SuperShop.Data
 {
     public class GenericRepository<T> : IGenericRepository<T> where T : class, IEntity // Design pattern that serves as intermediary class between the controller and database to prevent malfunction when altering or migrating database.
     {
-        private readonly DataContext _context; // Replaced by entity data context for this to be used in methods below.
+        private readonly DataContext _context; // Replaced by entity data context to be used in methods below.
 
         public GenericRepository(DataContext context)
         {
@@ -16,13 +16,14 @@ namespace UF5423_SuperShop.Data
 
         public IQueryable<T> GetAll()
         {
-            return _context.Set<T>().AsNoTracking(); // 'AsNoTracking': disconnect from entities after completion.
+            //return _context.Set<T>().AsNoTracking().OrderBy(e => e.Id); // Order common property values. Define in specific entity controller for unique case.
+            return _context.Set<T>().AsNoTracking();
         }
 
         public async Task<T> GetByIdAsync(int id)
         {
             return await _context.Set<T>()
-                .AsNoTracking()
+                .AsNoTracking() // 'AsNoTracking': disconnect from entities after completion.
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
