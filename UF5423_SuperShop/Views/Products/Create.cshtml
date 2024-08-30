@@ -1,52 +1,52 @@
-﻿@model UF5423_SuperShop.Data.Entities.Product // model to be used in view.
+﻿@model UF5423_SuperShop.Data.Entities. // model to be used in view.
 
 @{
     ViewData["Title"] = "Create new product";
 }
 
-<h1>New Product</h1>
+<h1>New </h1>
 <hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="ProductName" class="control-label"></label>
-                <input asp-for="ProductName" class="form-control" />
-                <span asp-validation-for="ProductName" class="text-danger"></span>
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ProductPrice" class="control-label"></label>
-                <input asp-for="ProductPrice" class="form-control" />
-                <span asp-validation-for="ProductPrice" class="text-danger"></span>
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ProductImageUrl" class="control-label"></label>
-                <input asp-for="ProductImageUrl" class="form-control" />
-                <span asp-validation-for="ProductImageUrl" class="text-danger"></span>
+                <label asp-for="ImageUrl" class="control-label"></label>
+                <input asp-for="ImageUrl" class="form-control" />
+                <span asp-validation-for="ImageUrl" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ProductLastPurchase" class="control-label"></label>
-                <input asp-for="ProductLastPurchase" class="form-control" />
-                <span asp-validation-for="ProductLastPurchase" class="text-danger"></span>
+                <label asp-for="LastPurchase" class="control-label"></label>
+                <input asp-for="LastPurchase" class="form-control" />
+                <span asp-validation-for="LastPurchase" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ProductLastSale" class="control-label"></label>
-                <input asp-for="ProductLastSale" class="form-control" />
-                <span asp-validation-for="ProductLastSale" class="text-danger"></span>
+                <label asp-for="LastSale" class="control-label"></label>
+                <input asp-for="LastSale" class="form-control" />
+                <span asp-validation-for="LastSale" class="text-danger"></span>
             </div>
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="ProductIsAvailable" /> @Html.DisplayNameFor(model => model.ProductIsAvailable)
+                    <input class="form-check-input" asp-for="IsAvailable" /> @Html.DisplayNameFor(model => model.IsAvailable)
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="ProductStock" class="control-label"></label>
-                <input asp-for="ProductStock" class="form-control" />
-                <span asp-validation-for="ProductStock" class="text-danger"></span>
+                <label asp-for="Stock" class="control-label"></label>
+                <input asp-for="Stock" class="form-control" />
+                <span asp-validation-for="Stock" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />   
+                <input type="submit" value="Create" class="btn btn-primary" />
                 <a asp-action="Index" class="btn btn-danger">Cancel</a>
             </div>
         </form>
@@ -54,5 +54,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

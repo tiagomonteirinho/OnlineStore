@@ -27,7 +27,7 @@ namespace UF5423_SuperShop
 
             //services.AddSingleton(); // Keep object in memory throughout application run-time.
             services.AddTransient<SeedDb>(); // Remove object from memory after completion.
-            services.AddScoped<IRepository, Repository>(); // Keep object in memory until another of same type is created and replaces it.
+            services.AddScoped<IProductRepository, ProductRepository>(); // Keep object in memory until another of same type is created and replaces it.
             services.AddControllersWithViews();
         }
 

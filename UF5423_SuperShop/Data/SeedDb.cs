@@ -36,10 +36,10 @@ namespace UF5423_SuperShop.Data
         {
             _context.Products.Add(new Product
             {
-                ProductName = productName,
-                ProductPrice = _random.Next(99, 1499),
-                ProductIsAvailable = true,
-                ProductStock = _random.Next(99, 999),
+                Name = productName,
+                Price = _random.Next(99, 1499),
+                IsAvailable = true,
+                Stock = _random.Next(99, 999),
             });
         }
     }

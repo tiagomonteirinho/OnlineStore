@@ -9,28 +9,28 @@ namespace UF5423_SuperShop.Controllers
 {
     public class ProductsController : Controller
     {
-        private readonly IRepository _repository;
+        private readonly IProductRepository _productRepository;
 
-        public ProductsController(IRepository repository)
+        public ProductsController(IProductRepository productRepository)
         {
-            _repository = repository;
+            _productRepository = productRepository;
         }
 
         // GET: Products
         public IActionResult Index()
         {
-            return View(_repository.GetProducts());
+            return View(_productRepository.GetAll());
         }
 
         // GET: Products/Details/5
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var product = _repository.GetProduct(id.Value);
+            var product = await _productRepository.GetByIdAsync(id.Value);
             if (product == null)
             {
                 return NotFound();
@@ -50,12 +50,11 @@ namespace UF5423_SuperShop.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(/*[Bind("ProductId,ProductName,ProductPrice,ProductImageUrl,ProductLastPurchase,ProductLastSale,ProductIsAvailable,ProductStock")]*/ Product product)
+        public async Task<IActionResult> Create(/*[Bind("Id,Name,Price,ImageUrl,LastPurchase,LastSale,IsAvailable,Stock")]*/ Product product)
         {
             if (ModelState.IsValid)
             {
-                _repository.UpdateProduct(product);
-                await _repository.SaveAllAsync();
+                await _productRepository.CreateAsync(product);
                 //return RedirectToAction("Index"); // Define custom action name.
                 return RedirectToAction(nameof(Index)); // Redirect to products list action.
             }
@@ -63,14 +62,14 @@ namespace UF5423_SuperShop.Controllers
         }
 
         // GET: Products/Edit/5
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return NotFound();
             }
 
-            var product = _repository.GetProduct(id.Value);
+            var product = await _productRepository.GetByIdAsync(id.Value);
             if (product == null)
             {
                 return NotFound();
@@ -85,7 +84,7 @@ namespace UF5423_SuperShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Product product) // Gets product ID seperately.
         {
-            if (id != product.ProductId)
+            if (id != product.Id)
             {
                 return NotFound();
             }
@@ -94,12 +93,11 @@ namespace UF5423_SuperShop.Controllers
             {
                 try
                 {
-                    _repository.UpdateProduct(product);
-                    await _repository.SaveAllAsync();
+                    await _productRepository.UpdateAsync(product);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!_repository.ProductExists(product.ProductId))
+                    if (!await _productRepository.ExistsAsync(product.Id))
                     {
                         return NotFound();
                     }
@@ -114,14 +112,14 @@ namespace UF5423_SuperShop.Controllers
         }
 
         // GET: Products/Delete/5
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) // Check if product ID exists.
             {
                 return NotFound();
             }
 
-            var product = _repository.GetProduct(id.Value);
+            var product = await _productRepository.GetByIdAsync(id.Value);
             if (product == null)
             {
                 return NotFound(); // Check if product exists.
@@ -135,9 +133,8 @@ namespace UF5423_SuperShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id) // Ensure product still exists.
         {
-            var product = _repository.GetProduct(id);
-            _repository.RemoveProduct(product); //Delete product from data base.
-            await _repository.SaveAllAsync();
+            var product = await _productRepository.GetByIdAsync(id);
+            await _productRepository.DeleteAsync(product); //Delete product from data base.
             return RedirectToAction(nameof(Index));
         }
     }

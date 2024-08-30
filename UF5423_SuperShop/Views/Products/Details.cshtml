@@ -8,51 +8,51 @@
 <hr />
 <div>
     <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductName)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Name)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductName)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Name)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductPrice)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductPrice)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Price)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductImageUrl)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ImageUrl)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductImageUrl)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ImageUrl)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductLastPurchase)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastPurchase)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductLastPurchase)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastPurchase)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductLastSale)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.LastSale)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductLastSale)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.LastSale)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductIsAvailable)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.IsAvailable)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductIsAvailable)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.IsAvailable)
         </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.ProductStock)
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Stock)
         </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.ProductStock)
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Stock)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model.ProductId" class="btn btn-primary">Edit</a> @*'asp-controller' automatically defined as current controller.*@
+    <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit</a> @*'asp-controller' automatically defined as current controller.*@
     <a asp-action="Index" class="btn btn-danger">Cancel</a>
 </div>

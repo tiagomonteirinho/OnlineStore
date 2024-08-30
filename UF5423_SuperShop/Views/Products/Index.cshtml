@@ -13,59 +13,60 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ProductName) @*display UI name.*@
+                @Html.DisplayNameFor(model => model.Name) @*display UI name.*@
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductPrice)
+                @Html.DisplayNameFor(model => model.Price)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductImageUrl)
+                @Html.DisplayNameFor(model => model.ImageUrl)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductLastPurchase)
+                @Html.DisplayNameFor(model => model.LastPurchase)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductLastSale)
+                @Html.DisplayNameFor(model => model.LastSale)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductIsAvailable)
+                @Html.DisplayNameFor(model => model.IsAvailable)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ProductStock)
+                @Html.DisplayNameFor(model => model.Stock)
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductImageUrl)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductLastPurchase)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductLastSale)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductIsAvailable)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ProductStock)
-            </td>
-            <td>
-                    <a asp-action="Edit" asp-route-id="@item.ProductId" class="text-warning">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductId" class="text-info">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.ProductId" class="text-danger">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImageUrl)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastPurchase)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LastSale)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsAvailable)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Stock)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.Id" class="text-warning">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.Id" class="text-info">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id" class="text-danger">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
