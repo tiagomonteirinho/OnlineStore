@@ -18,7 +18,7 @@ namespace UF5423_SuperShop.Controllers.API
         [HttpGet]
         public IActionResult GetProducts()
         {
-            return Ok(_productRepository.GetAll()); // Return products from 'IProductRepository' converted to JSON.
+            return Ok(_productRepository.GetAllWithUser()); // Return products from 'IProductRepository' converted to JSON.
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model UF5423_SuperShop.Data.Entities.Product
+﻿@model UF5423_SuperShop.Models.ProductViewModel
 
 @{
     ViewData["Title"] = "Edit product";
@@ -7,10 +7,11 @@
 <h1>Edit Product</h1>
 <hr />
 <div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
+    <div class="col-md-4"> @* Column 1 *@ @* 'col-md-4': Bootstrap occupied columns out of 12 (maximum). *@
+        <form asp-action="Edit" enctype="multipart/form-data">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
+            <input type="hidden" asp-for="ImageUrl" /> @* Keep image URL if file is unchanged. *@
             <div class="form-group">
                 <label asp-for="Name" class="control-label"></label>
                 <input asp-for="Name" class="form-control" />
@@ -22,9 +23,9 @@
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="ImageUrl" class="control-label"></label>
-                <input asp-for="ImageUrl" class="form-control" />
-                <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                <label asp-for="ImageFile" class="control-label"></label>
+                <input asp-for="ImageFile" class="form-control" type="file"/>
+                <span asp-validation-for="ImageFile" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="LastPurchase" class="control-label"></label>
@@ -51,6 +52,12 @@
                 <a asp-action="Index" class="btn btn-danger">Cancel</a>
             </div>
         </form>
+    </div>
+    <div class="col-md-4"> @* Column 2 *@
+        @if (!string.IsNullOrEmpty(Model.ImageUrl)) @* If image url exists *@
+        {
+            <img src="@Url.Content(Model.ImageUrl)" alt="Image" style="width:300px;height:450px;max-width:100%;height:auto" /> @* Get image from path *@ @* 'Content': application path. *@
+        }
     </div>
 </div>
 
