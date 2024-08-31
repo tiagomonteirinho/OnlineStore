@@ -1,10 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using UF5423_SuperShop.Data;
+using UF5423_SuperShop.Data.Entities;
+using UF5423_SuperShop.Helpers;
 
 namespace UF5423_SuperShop
 {
@@ -20,14 +23,30 @@ namespace UF5423_SuperShop
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddIdentity<User, IdentityRole>(cfg => // Replace 'User' by 'IdentityUser' to use ASP.NET Core default user.
+            {
+                cfg.User.RequireUniqueEmail = true;
+                cfg.Password.RequireDigit = false;
+                cfg.Password.RequiredUniqueChars = 0;
+                cfg.Password.RequireUppercase = false;
+                cfg.Password.RequireLowercase = false;
+                cfg.Password.RequireNonAlphanumeric = false;
+                cfg.Password.RequiredLength = 6;
+            }
+            ).AddEntityFrameworkStores<DataContext>(); // Use simple data context after authentication completion.
+
             services.AddDbContext<DataContext>(cfg =>
             {
                 cfg.UseSqlServer(this.Configuration.GetConnectionString("LocalConnectionString")); // Get connection string from 'appsettings.json'.
             });
 
             //services.AddSingleton(); // Keep object in memory throughout application run-time.
-            services.AddTransient<SeedDb>(); // Remove object from memory after completion.
-            services.AddScoped<IProductRepository, ProductRepository>(); // Keep object in memory until another of same type is created and replaces it. // 'ProductRepository': automatically instantiated at 'ProductsController' constructor.
+
+            services.AddTransient<SeedDb>(); // 'AddTransient': Remove object from memory after completion.
+
+            services.AddScoped<IUserHelper, UserHelper>();
+            services.AddScoped<IProductRepository, ProductRepository>(); // 'AddScoped': Keep object in memory until another of same type is created and replaces it. // 'ProductRepository': automatically instantiated at 'ProductsController' constructor.
+
             services.AddControllersWithViews();
         }
 
@@ -48,6 +67,8 @@ namespace UF5423_SuperShop
             app.UseStaticFiles();
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

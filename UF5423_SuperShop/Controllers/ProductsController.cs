@@ -4,16 +4,19 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using UF5423_SuperShop.Data;
 using UF5423_SuperShop.Data.Entities;
+using UF5423_SuperShop.Helpers;
 
 namespace UF5423_SuperShop.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly IProductRepository _productRepository;
+        private readonly IUserHelper _userHelper;
 
-        public ProductsController(IProductRepository productRepository)
+        public ProductsController(IProductRepository productRepository, IUserHelper userHelper)
         {
             _productRepository = productRepository;
+            _userHelper = userHelper;
         }
 
         // GET: Products
@@ -54,6 +57,8 @@ namespace UF5423_SuperShop.Controllers
         {
             if (ModelState.IsValid)
             {
+                //TODO: define product user as logged-in user.
+                product.User = await _userHelper.GetUserByEmailAsync("tiagomonteirinho.spam@gmail.com");
                 await _productRepository.CreateAsync(product);
                 //return RedirectToAction("Index"); // Define custom action name.
                 return RedirectToAction(nameof(Index)); // Redirect to products list action.
@@ -93,6 +98,8 @@ namespace UF5423_SuperShop.Controllers
             {
                 try
                 {
+                    //TODO: define product user as logged-in user.
+                    product.User = await _userHelper.GetUserByEmailAsync("tiagomonteirinho.spam@gmail.com"); // Prevent from removing product user on update.
                     await _productRepository.UpdateAsync(product);
                 }
                 catch (DbUpdateConcurrencyException)
