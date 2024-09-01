@@ -15,11 +15,15 @@ namespace UF5423_SuperShop.Controllers
     {
         private readonly IProductRepository _productRepository;
         private readonly IUserHelper _userHelper;
+        private readonly IImageHelper _imageHelper;
+        private readonly IConverterHelper _converterHelper;
 
-        public ProductsController(IProductRepository productRepository, IUserHelper userHelper)
+        public ProductsController(IProductRepository productRepository, IUserHelper userHelper, IImageHelper imageHelper, IConverterHelper converterHelper)
         {
             _productRepository = productRepository;
             _userHelper = userHelper;
+            _imageHelper = imageHelper;
+            _converterHelper = converterHelper;
         }
 
         // GET: Products
@@ -61,26 +65,13 @@ namespace UF5423_SuperShop.Controllers
             if (ModelState.IsValid)
             {
                 var path = string.Empty;
+
                 if (model.ImageFile != null && model.ImageFile.Length > 0) // If model image file exists
                 {
-                    var guid = Guid.NewGuid().ToString(); // Globally unique identifier string.
-                    var fileName = $"{guid}.png"; // Prevent file name repetition.
-
-                    path = Path.Combine(
-                        Directory.GetCurrentDirectory(), // Application directory.
-                        "wwwroot\\images\\products", // File directory within application.
-                        fileName // File name.
-                        );
-
-                    using (var stream = new FileStream(path, FileMode.Create))
-                    {
-                        await model.ImageFile.CopyToAsync(stream); // Save file to path.
-                    }
-
-                    path = $"~/images/products/{fileName}"; // File path to save to database.
+                    path = await _imageHelper.UploadImageAsync(model.ImageFile, "products"); // Upload image file and get path to save to database.
                 }
 
-                var product = this.ConvertToProduct(model, path);
+                var product = _converterHelper.ConvertToProductModel(model, path, true);
 
                 //TODO: define product user as logged-in user.
                 product.User = await _userHelper.GetUserByEmailAsync("tiagomonteirinho.spam@gmail.com");
@@ -89,22 +80,6 @@ namespace UF5423_SuperShop.Controllers
                 return RedirectToAction(nameof(Index)); // Redirect to products list action.
             }
             return View(model); // Keep input changes if model data is invalid.
-        }
-
-        private Product ConvertToProduct(ProductViewModel model, string path) // Convert product view model to product model.
-        {
-            return new Product
-            {
-                Id = model.Id,
-                Name = model.Name,
-                Price = model.Price,
-                ImageUrl = path,
-                LastPurchase = model.LastPurchase,
-                LastSale = model.LastSale,
-                IsAvailable = model.IsAvailable,
-                Stock = model.Stock,
-                User = model.User
-            };
         }
 
         // GET: Products/Edit/5
@@ -121,25 +96,9 @@ namespace UF5423_SuperShop.Controllers
                 return NotFound();
             }
 
-            var model = this.ConvertToProductViewModel(product); // Get product view model to show image file.
+            var model = _converterHelper.ConvertToProductViewModel(product); // Get product view model to show image file.
 
             return View(model);
-        }
-
-        private ProductViewModel ConvertToProductViewModel(Product product) // Convert product model to product view model.
-        {
-            return new ProductViewModel
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price,
-                ImageUrl = product.ImageUrl,
-                LastPurchase = product.LastPurchase,
-                LastSale = product.LastSale,
-                IsAvailable = product.IsAvailable,
-                Stock = product.Stock,
-                User = product.User
-            };
         }
 
         // POST: Products/Edit/5
@@ -162,27 +121,13 @@ namespace UF5423_SuperShop.Controllers
 
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
-                        var guid = Guid.NewGuid().ToString();
-                        var fileName = $"{guid}.png";
-
-                        path = Path.Combine(
-                            Directory.GetCurrentDirectory(),
-                            "wwwroot\\images\\products",
-                            fileName
-                            );
-
-                        using(var stream = new FileStream(path, FileMode.Create))
-                        {
-                            await model.ImageFile.CopyToAsync(stream);
-                        }
-
-                        path = $"~/images/products/{fileName}";
+                        path = await _imageHelper.UploadImageAsync(model.ImageFile, "products");
                     }
 
-                    var product = this.ConvertToProduct(model, path);
+                    var product = _converterHelper.ConvertToProductModel(model, path, false);
 
                     //TODO: define product user as logged-in user.
-                    product.User = await _userHelper.GetUserByEmailAsync("tiagomonteirinho.spam@gmail.com"); // Prevent from removing product user on update.
+                    product.User = await _userHelper.GetUserByEmailAsync("tiagomonteirinho.spam@gmail.com"); // Prevent product user removal on update.
                     await _productRepository.UpdateAsync(product);
                 }
                 catch (DbUpdateConcurrencyException)

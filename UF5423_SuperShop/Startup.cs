@@ -44,8 +44,11 @@ namespace UF5423_SuperShop
 
             services.AddTransient<SeedDb>(); // 'AddTransient': Remove object from memory after completion.
 
-            services.AddScoped<IUserHelper, UserHelper>();
-            services.AddScoped<IProductRepository, ProductRepository>(); // 'AddScoped': Keep object in memory until another of same type is created and replaces it. // 'ProductRepository': automatically instantiated at 'ProductsController' constructor.
+            services.AddScoped<IUserHelper, UserHelper>(); // 'AddScoped': Keep object in memory until another of same type is created and replaces it.
+            services.AddScoped<IImageHelper, ImageHelper>(); // Instantiated at 'ProductsController' constructor.
+            services.AddScoped<IConverterHelper, ConverterHelper>();
+
+            services.AddScoped<IProductRepository, ProductRepository>();
 
             services.AddControllersWithViews();
         }
