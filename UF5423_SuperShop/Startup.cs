@@ -37,7 +37,7 @@ namespace UF5423_SuperShop
 
             services.AddDbContext<DataContext>(cfg =>
             {
-                cfg.UseSqlServer(this.Configuration.GetConnectionString("LocalConnectionString")); // Get connection string from 'appsettings.json'.
+                cfg.UseSqlServer(this.Configuration.GetConnectionString("SomeeConnectionString")); // Get connection string from 'appsettings.json'.
             });
 
             //services.AddSingleton(); // Keep object in memory throughout application run-time.

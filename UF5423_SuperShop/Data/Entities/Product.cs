@@ -42,14 +42,15 @@ namespace UF5423_SuperShop.Data.Entities
 
         public string ImageFullPath
         {
+            //TODO: Add Azure blobs.
             get
             {
                 if (string.IsNullOrEmpty(ImageUrl))
                 {
-                    return null;
+                    return $"https://tiagomonteirinho.somee.com//images/image-unavailable.jpg";
                 }
 
-                return $"https://localhost:44333{ImageUrl.Substring(1)}"; // 'Substring(1)': remove first string character ('~').
+                return $"https://tiagomonteirinho.somee.com/{ImageUrl.Substring(1)}"; // 'Substring(1)': remove first string character ('~').
             }
         } 
     }
