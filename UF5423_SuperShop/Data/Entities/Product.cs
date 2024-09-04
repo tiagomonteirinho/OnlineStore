@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using System.Security.Principal;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace UF5423_SuperShop.Data.Entities
 {
@@ -42,12 +43,13 @@ namespace UF5423_SuperShop.Data.Entities
 
         public string ImageFullPath
         {
-            //TODO: Add Azure blobs.
+            //TODO: Add blobs.
             get
             {
                 if (string.IsNullOrEmpty(ImageUrl))
                 {
-                    return $"https://tiagomonteirinho.somee.com//images/image-unavailable.jpg";
+                    //return $"https://tiagomonteirinho.somee.com/images/image_unavailable.jpg";
+                    return $"https://localhost:44333//images/image_unavailable.jpg";
                 }
 
                 return $"https://tiagomonteirinho.somee.com/{ImageUrl.Substring(1)}"; // 'Substring(1)': remove first string character ('~').
