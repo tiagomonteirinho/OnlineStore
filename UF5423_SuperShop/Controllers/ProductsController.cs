@@ -1,16 +1,15 @@
-﻿using System;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
+using System.Threading.Tasks;
 using UF5423_SuperShop.Data;
-using UF5423_SuperShop.Data.Entities;
 using UF5423_SuperShop.Helpers;
 using UF5423_SuperShop.Models;
 
 namespace UF5423_SuperShop.Controllers
 {
+    //[Authorize] // Prevent access to non-authenticated users. // Replace view with login view and return to previous view after authentication.
     public class ProductsController : Controller
     {
         private readonly IProductRepository _productRepository;
@@ -50,6 +49,7 @@ namespace UF5423_SuperShop.Controllers
         }
 
         // GET: Products/Create
+        [Authorize]
         public IActionResult Create() // Automatically set as create action and view by having action name 'Create' of type IActionResult.
         {
             return View();
@@ -83,6 +83,7 @@ namespace UF5423_SuperShop.Controllers
         }
 
         // GET: Products/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -147,6 +148,7 @@ namespace UF5423_SuperShop.Controllers
         }
 
         // GET: Products/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null) // Check if product ID exists.

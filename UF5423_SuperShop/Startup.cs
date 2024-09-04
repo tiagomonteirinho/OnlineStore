@@ -71,8 +71,7 @@ namespace UF5423_SuperShop
 
             app.UseRouting();
 
-            app.UseAuthentication();
-
+            app.UseAuthentication(); // Allow user authentication. // Define before 'UseAuthorization'.
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
