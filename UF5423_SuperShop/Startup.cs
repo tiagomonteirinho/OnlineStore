@@ -1,10 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
 using UF5423_SuperShop.Data;
 using UF5423_SuperShop.Data.Entities;
 using UF5423_SuperShop.Helpers;
@@ -21,7 +23,7 @@ namespace UF5423_SuperShop
         public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services, IWebHostEnvironment env)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddIdentity<User, IdentityRole>(cfg => // Replace 'User' by 'IdentityUser' to use ASP.NET Core default user.
             {
@@ -35,21 +37,10 @@ namespace UF5423_SuperShop
             }
             ).AddEntityFrameworkStores<DataContext>(); // Use simple data context after authentication completion.
 
-
-            if (!env.IsDevelopment())
+            services.AddDbContext<DataContext>(cfg =>
             {
-                services.AddDbContext<DataContext>(cfg =>
-                {
-                    cfg.UseSqlServer(this.Configuration.GetConnectionString("SomeeConnectionString")); // Get connection string from 'appsettings.json'.
-                });
-            }
-            else
-            {
-                services.AddDbContext<DataContext>(cfg =>
-                {
-                    cfg.UseSqlServer(this.Configuration.GetConnectionString("LocalConnectionString")); // Get connection string from 'appsettings.json'.
-                });
-            }
+                cfg.UseSqlServer(this.Configuration.GetConnectionString("SomeeConnectionString")); // Get connection string from 'appsettings.json'.
+            });
 
             //services.AddSingleton(); // Keep object in memory throughout application run-time.
 
