@@ -10,7 +10,7 @@ using UF5423_SuperShop.Data;
 namespace UF5423_SuperShop.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20240830201413_AddUsers")]
+    [Migration("20240905112207_AddUsers")]
     partial class AddUsers
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

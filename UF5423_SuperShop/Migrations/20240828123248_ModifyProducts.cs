@@ -8,7 +8,7 @@ namespace UF5423_SuperShop.Migrations
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "ProductName",
+                name: "Name",
                 table: "Products",
                 type: "nvarchar(99)",
                 maxLength: 99,
@@ -19,7 +19,7 @@ namespace UF5423_SuperShop.Migrations
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<DateTime>(
-                name: "ProductLastSale",
+                name: "LastSale",
                 table: "Products",
                 type: "datetime2",
                 nullable: true,
@@ -27,7 +27,7 @@ namespace UF5423_SuperShop.Migrations
                 oldType: "datetime2");
 
             migrationBuilder.AlterColumn<DateTime>(
-                name: "ProductLastPurchase",
+                name: "LastPurchase",
                 table: "Products",
                 type: "datetime2",
                 nullable: true,
@@ -38,7 +38,7 @@ namespace UF5423_SuperShop.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AlterColumn<string>(
-                name: "ProductName",
+                name: "Name",
                 table: "Products",
                 type: "nvarchar(max)",
                 nullable: true,
@@ -47,7 +47,7 @@ namespace UF5423_SuperShop.Migrations
                 oldMaxLength: 99);
 
             migrationBuilder.AlterColumn<DateTime>(
-                name: "ProductLastSale",
+                name: "LastSale",
                 table: "Products",
                 type: "datetime2",
                 nullable: false,
@@ -57,7 +57,7 @@ namespace UF5423_SuperShop.Migrations
                 oldNullable: true);
 
             migrationBuilder.AlterColumn<DateTime>(
-                name: "ProductLastPurchase",
+                name: "LastPurchase",
                 table: "Products",
                 type: "datetime2",
                 nullable: false,
