@@ -3,7 +3,6 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
-appsettings.json
 
 # User-specific files
 *.rsuser
@@ -99,6 +98,7 @@ StyleCopReport.xml
 *.pidb
 *.svclog
 *.scc
+*.json
 
 # Chutzpah Test files
 _Chutzpah*
