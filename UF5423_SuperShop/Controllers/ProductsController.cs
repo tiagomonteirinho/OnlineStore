@@ -73,8 +73,7 @@ namespace UF5423_SuperShop.Controllers
 
                 var product = _converterHelper.ConvertToProductModel(model, path, true);
 
-                //TODO: define product user as logged-in user.
-                product.User = await _userHelper.GetUserByEmailAsync("tiagomonteirinho.spam@gmail.com");
+                product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 await _productRepository.CreateAsync(product);
                 //return RedirectToAction("Index"); // Define custom action name.
                 return RedirectToAction(nameof(Index)); // Redirect to products list action.
@@ -127,8 +126,7 @@ namespace UF5423_SuperShop.Controllers
 
                     var product = _converterHelper.ConvertToProductModel(model, path, false);
 
-                    //TODO: define product user as logged-in user.
-                    product.User = await _userHelper.GetUserByEmailAsync("tiagomonteirinho.spam@gmail.com"); // Prevent product user removal on update.
+                    product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name); // Set product user as posting user.
                     await _productRepository.UpdateAsync(product);
                 }
                 catch (DbUpdateConcurrencyException)

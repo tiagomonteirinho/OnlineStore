@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
+using UF5423_SuperShop.Data.Entities;
 using UF5423_SuperShop.Helpers;
 using UF5423_SuperShop.Models;
 
@@ -50,6 +52,54 @@ namespace UF5423_SuperShop.Controllers
         {
             await _userHelper.LogoutAsync();
             return RedirectToAction("Index", "Home");
+        }
+
+        public IActionResult Register()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(model.Username);
+                if (user == null) // If account doesn't exist
+                {
+                    user = new User
+                    {
+                        FirstName = model.FirstName,
+                        LastName = model.LastName,
+                        UserName = model.Username,
+                        Email = model.Username,
+                    };
+
+                    var result = await _userHelper.AddUserAsync(user, model.Password);
+                    if (result != IdentityResult.Success)
+                    {
+                        ModelState.AddModelError(string.Empty, "Could not register account.");
+                        return View(model);
+                    }
+
+                    var loginViewModel = new LoginViewModel // Create account login view model.
+                    {
+                        UserName = model.Username,
+                        Password = model.Password,
+                        RememberMe = false,
+                    };
+
+                    var result2 = await _userHelper.LoginAsync(loginViewModel); // Login automatically after registration.
+                    if (result2.Succeeded)
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
+
+                    ModelState.AddModelError(string.Empty, "Could not log in.");
+                }
+            }
+
+            return View(model);
         }
     }
 }
