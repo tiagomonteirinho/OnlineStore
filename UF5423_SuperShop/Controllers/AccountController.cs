@@ -78,8 +78,15 @@ namespace UF5423_SuperShop.Controllers
                     var result = await _userHelper.AddUserAsync(user, model.Password);
                     if (result != IdentityResult.Success)
                     {
-                        ModelState.AddModelError(string.Empty, "Could not register account.");
+                        ModelState.AddModelError(string.Empty, "Could not register user account.");
                         return View(model);
+                    }
+
+                    await _userHelper.AddUserToRoleAsync(user, "Customer");
+                    var isInRole = await _userHelper.IsUserInRoleAsync(user, "Customer"); // Ensure user is in role.
+                    if (!isInRole) // If user is not in role
+                    {
+                        await _userHelper.AddUserToRoleAsync(user, "Customer"); // Force user addition to role.
                     }
 
                     var loginViewModel = new LoginViewModel // Create account login view model.

@@ -43,7 +43,7 @@ namespace UF5423_SuperShop.Data
                 var result = await _userHelper.AddUserAsync(user, "123456"); // Create user with entity data and password.
                 if (result != IdentityResult.Success) // If user still doesn't exist
                 {
-                    throw new InvalidOperationException("Unable to create seed user.");
+                    throw new InvalidOperationException("Could not create seed user account.");
                 }
 
                 await _userHelper.AddUserToRoleAsync(user, "Admin");
