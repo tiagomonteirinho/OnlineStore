@@ -6,11 +6,11 @@ namespace UF5423_SuperShop.Controllers.API
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductsController : Controller // Products API Controller.
+    public class ProductsAPIController : Controller // Products API Controller.
     {
         private readonly IProductRepository _productRepository;
 
-        public ProductsController(IProductRepository productRepository)
+        public ProductsAPIController(IProductRepository productRepository)
         {
             _productRepository = productRepository;
         }

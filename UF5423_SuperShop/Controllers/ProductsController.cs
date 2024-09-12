@@ -49,7 +49,7 @@ namespace UF5423_SuperShop.Controllers
         }
 
         // GET: Products/Create
-        [Authorize]
+        [Authorize(Roles = "Admin")] // Set exclusive access to certain roles.
         public IActionResult Create() // Automatically set as create action and view by having action name 'Create' of type IActionResult.
         {
             return View();

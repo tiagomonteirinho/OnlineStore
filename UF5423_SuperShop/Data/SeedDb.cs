@@ -24,7 +24,9 @@ namespace UF5423_SuperShop.Data
 
         public async Task SeedAsync()
         {
-            await _context.Database.EnsureCreatedAsync(); // Create database if there is none.
+            await _context.Database.EnsureCreatedAsync(); // Create database if it doesn't exist.
+            await _userHelper.CheckRoleAsync("Admin"); // Create user role if it doesn't exist.
+            await _userHelper.CheckRoleAsync("Customer");
 
             var user = await _userHelper.GetUserByEmailAsync("tiagomonteirinho.spam@gmail.com"); // Define seed user if exists.
             if (user == null) // If user doesn't exist
@@ -43,6 +45,14 @@ namespace UF5423_SuperShop.Data
                 {
                     throw new InvalidOperationException("Unable to create seed user.");
                 }
+
+                await _userHelper.AddUserToRoleAsync(user, "Admin");
+            }
+
+            var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin"); // Ensure user is in role.
+            if (!isInRole) // If user is not in role
+            {
+                await _userHelper.AddUserToRoleAsync(user, "Admin"); // Force user addition to role.
             }
 
             if (!_context.Products.Any()) // If data base is empty
