@@ -36,13 +36,14 @@ namespace UF5423_SuperShop.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                //return NotFound();
+                return new NotFoundViewResult("ProductNotFound"); // Replace product not found view.
             }
 
             var product = await _productRepository.GetByIdAsync(id.Value);
             if (product == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
             return View(product);
@@ -87,13 +88,13 @@ namespace UF5423_SuperShop.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
             var product = await _productRepository.GetByIdAsync(id.Value);
             if (product == null)
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
             var model = _converterHelper.ConvertToProductViewModel(product); // Get product view model to show image file.
@@ -151,13 +152,13 @@ namespace UF5423_SuperShop.Controllers
         {
             if (id == null) // Check if product ID exists.
             {
-                return NotFound();
+                return new NotFoundViewResult("ProductNotFound");
             }
 
             var product = await _productRepository.GetByIdAsync(id.Value);
             if (product == null)
             {
-                return NotFound(); // Check if product exists.
+                return new NotFoundViewResult("ProductNotFound"); // Check if product still exists.
             }
 
             return View(product); // Delete product from memory.
@@ -171,6 +172,11 @@ namespace UF5423_SuperShop.Controllers
             var product = await _productRepository.GetByIdAsync(id);
             await _productRepository.DeleteAsync(product); //Delete product from data base.
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult ProductNotFound()
+        {
+            return View();
         }
     }
 }

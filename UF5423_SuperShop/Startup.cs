@@ -52,6 +52,12 @@ namespace UF5423_SuperShop
 
             services.AddScoped<IProductRepository, ProductRepository>();
 
+            services.ConfigureApplicationCookie(cfg =>
+            {
+                cfg.LoginPath = "/Account/NotAuthorized"; // Replace redirected login view from '[Authorized]' actions if user is logged out (401 Unauthorized).
+                cfg.AccessDeniedPath = "/Account/NotAuthorized"; // Replace default forbidden view if user is logged in but without action permissions (403 Forbidden).
+            });
+
             services.AddControllersWithViews();
         }
 
@@ -68,6 +74,9 @@ namespace UF5423_SuperShop
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseStatusCodePagesWithReExecute("/error/{0}"); // Replace specific error code action views. // Routes defined at HomeController.cs to execute at start up.
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

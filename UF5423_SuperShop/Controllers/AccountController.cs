@@ -35,10 +35,11 @@ namespace UF5423_SuperShop.Controllers
                 var result = await _userHelper.LoginAsync(model); // Login.
                 if (result.Succeeded) // If user login in successful
                 {
-                    if (this.Request.Query.Keys.Contains("ReturnUrl")) // If request contains "ReturnURL"
-                    {
-                        return Redirect(this.Request.Query["ReturnUrl"].First()); // Redirect to such URL.
-                    }
+                    //if (this.Request.Query.Keys.Contains("ReturnUrl")) // If request contains "ReturnURL"
+                    //{
+                    //    return Redirect(this.Request.Query["ReturnUrl"].First()); // Redirect to such URL.
+                    //}
+                    // Replaced by NotAuthorized.cshtml at Startup.cs.
 
                     return this.RedirectToAction("Index", "Home");
                 }
@@ -177,5 +178,10 @@ namespace UF5423_SuperShop.Controllers
             }
             return this.View(model);
         } 
+
+        public IActionResult NotAuthorized()
+        {
+            return View();
+        }
     } 
 }
