@@ -3,6 +3,7 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
+# Do not add '#' anywhere in a functional line, otherwise it will become a comment.
 
 # User-specific files
 *.rsuser
@@ -99,6 +100,11 @@ StyleCopReport.xml
 *.svclog
 *.scc
 *.json
+# '*.[type]' to ignore all files of specific type in directory.
+
+# UF5423_SuperShop files
+!libman.json
+# '!' to negate pattern previously set in specific files.
 
 # Chutzpah Test files
 _Chutzpah*
@@ -398,4 +404,3 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-/UF5423_SuperShop/appsettings.json
