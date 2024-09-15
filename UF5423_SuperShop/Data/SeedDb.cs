@@ -24,19 +24,20 @@ namespace UF5423_SuperShop.Data
 
         public async Task SeedAsync()
         {
-            await _context.Database.EnsureCreatedAsync(); // Create database if it doesn't exist.
+            //await _context.Database.EnsureCreatedAsync(); // Create database if it doesn't exist. // Does not create database with migrations.
+            await _context.Database.MigrateAsync(); // Create database with both seed and migrations.
             await _userHelper.CheckRoleAsync("Admin"); // Create user role if it doesn't exist.
             await _userHelper.CheckRoleAsync("Customer");
 
-            var user = await _userHelper.GetUserByEmailAsync("tiagomonteirinho.spam@gmail.com"); // Define seed user if exists.
+            var user = await _userHelper.GetUserByEmailAsync("tiagomonteirinho@mail.com"); // Define seed user if exists.
             if (user == null) // If user doesn't exist
             {
                 user = new User // Define user entity data.
                 {
                     FirstName = "Tiago",
                     LastName = "Monteirinho",
-                    Email = "tiagomonteirinho.spam@gmail.com",
-                    UserName = "tiagomonteirinho.spam@gmail.com",
+                    Email = "tiagomonteirinho@mail.com",
+                    UserName = "tiagomonteirinho@mail.com",
                     PhoneNumber = "123456789"
                 };
 
