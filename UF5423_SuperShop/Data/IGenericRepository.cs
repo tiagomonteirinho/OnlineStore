@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace UF5423_SuperShop.Data
 {
-    public interface IGenericRepository<T> where T : class // Generic entity repository interface.
+    public interface IGenericRepository<T> where T : class // Generic entity repository interface. // Does not require instantiation when inherited by other interfaces.
     {
         IQueryable<T> GetAll(); // List that gets all entities.
 

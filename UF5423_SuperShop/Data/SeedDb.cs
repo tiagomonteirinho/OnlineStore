@@ -29,15 +29,15 @@ namespace UF5423_SuperShop.Data
             await _userHelper.CheckRoleAsync("Admin"); // Create user role if it doesn't exist.
             await _userHelper.CheckRoleAsync("Customer");
 
-            var user = await _userHelper.GetUserByEmailAsync("tiagomonteirinho@mail.com"); // Define seed user if exists.
+            var user = await _userHelper.GetUserByEmailAsync("admin@supershop.com"); // Define seed user if exists.
             if (user == null) // If user doesn't exist
             {
                 user = new User // Define user entity data.
                 {
                     FirstName = "Tiago",
                     LastName = "Monteirinho",
-                    Email = "tiagomonteirinho@mail.com",
-                    UserName = "tiagomonteirinho@mail.com",
+                    Email = "admin@supershop.com",
+                    UserName = "admin@supershop.com",
                     PhoneNumber = "123456789"
                 };
 

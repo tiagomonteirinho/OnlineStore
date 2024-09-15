@@ -26,7 +26,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Products</a>
                         </li>
-                        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin")) // Set exclusive visibility to certain roles.
+                        @if (this.User.Identity.IsAuthenticated && this.User.IsInRole("Admin")) // If user is admin
                         {
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Admin</a>
@@ -43,8 +43,11 @@
                     </ul>
 
                     <ul class="nav navbar-nav navbar-right"> @* Navbar right. *@
-                        @if (this.User.Identity.IsAuthenticated)
+                        @if (this.User.Identity.IsAuthenticated) // If user is logged in
                         {
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a>
+                        </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ChangeUser">@this.User.Identity.Name</a>
                             </li>

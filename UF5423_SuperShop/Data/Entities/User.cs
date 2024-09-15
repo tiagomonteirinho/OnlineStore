@@ -7,5 +7,7 @@ namespace UF5423_SuperShop.Data.Entities
         public string FirstName { get; set; } // Custom user property.
 
         public string LastName { get; set; }
+
+        public string FullName => $"{FirstName} {LastName}";
     }
 }
