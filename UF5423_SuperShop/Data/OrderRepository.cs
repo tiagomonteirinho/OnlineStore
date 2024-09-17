@@ -40,5 +40,19 @@ namespace UF5423_SuperShop.Data
                 .OrderByDescending(o => o.OrderDate);
 
         }
+
+        public async Task<IQueryable<OrderDetailTemp>> GetOrderDetailsTempAsync(string username)
+        {
+            var user = await _userHelper.GetUserByEmailAsync(username);
+            if (user == null)
+            {
+                return null;
+            }
+
+            return _context.OrderDetailsTemp
+                .Include(od => od.Product)
+                .Where(od => od.User == user)
+                .OrderBy(od => od.Product.Name);
+        }
     }
 }
