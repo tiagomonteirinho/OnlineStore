@@ -1,5 +1,6 @@
 ﻿using Microsoft.CodeAnalysis.CSharp.Syntax;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using UF5423_SuperShop.Data.Entities;
@@ -30,8 +31,9 @@ namespace UF5423_SuperShop.Data
             if (await _userHelper.IsUserInRoleAsync(user, "Admin")) // If user is admin
             {
                 return _context.Orders // Get all orders.
-                    .Include(o => o.Items) // Join all order items (order detail) // 'Include': join directly linked table.
-                    .ThenInclude(i => i.Product) // Join all item products (order detail product) // 'ThenInclude': join table linked by intermediary table.
+                    .Include(o => o.Items) // Include all order items (order detail) // 'Include': join directly linked table.
+                    .ThenInclude(i => i.Product) // Include all item products (order detail product) // 'ThenInclude': join table linked by intermediary table.
+                    .Include(o => o.User) // Include order user object for name display.
                     .OrderByDescending(o => o.OrderDate);
             }
 
@@ -122,6 +124,44 @@ namespace UF5423_SuperShop.Data
 
             _context.OrderDetailsTemp.Remove(orderDetailTemp); // Remove item from order.
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<bool> ConfirmOrderAsync(string username)
+        {
+            var user = await _userHelper.GetUserByEmailAsync(username);
+            if (user == null)
+            {
+                return false;
+            }
+
+            var orderDetailsTemp = await _context.OrderDetailsTemp // Temporary list of order details.
+                .Include(od => od.Product)
+                .Where(od => od.User == user)
+                .ToListAsync();
+
+            if(orderDetailsTemp == null || orderDetailsTemp.Count == 0) // If list is null or empty
+            {
+                return false;
+            }
+
+            var orderDetails = orderDetailsTemp.Select(od => new OrderDetail // For each order detail in temporary list
+            {
+                Price = od.Price,
+                Product = od.Product,
+                Quantity = od.Quantity,
+            }).ToList(); // Convert to OrderDetail and add to definitive list.
+
+            var order = new Order
+            {
+                OrderDate = DateTime.UtcNow, // Standard date/time format.
+                User = user,
+                Items = orderDetails
+            };
+
+            await CreateAsync(order); // Create order
+            _context.OrderDetailsTemp.RemoveRange(orderDetailsTemp); // Remove temporary order details list to clear view form.
+            await _context.SaveChangesAsync();
+            return true;
         }
     }
 }

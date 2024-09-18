@@ -22,11 +22,11 @@ namespace UF5423_SuperShop.Data
 
         public IEnumerable<SelectListItem> GetComboBoxProducts() //'SelectListItem': HTML '<option>' or '<select>'.
         {
-            var list = _context.Products.Select(p => new SelectListItem // For each product in '_context'
+            var list = _context.Products.Select(p => new SelectListItem // For each product in '_context.Products'
             {
                 Text = p.Name, // 'option' text.
                 Value = p.Id.ToString(),
-            }).ToList(); // Add product to list as <option>.
+            }).ToList(); // Convert to SelectListItem and add to 'list'.
 
             list.Insert(0, new SelectListItem // First item with ID 0, whose addition is not allowed at AddItemViewModel.cs.
             {

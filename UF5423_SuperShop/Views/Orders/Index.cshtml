@@ -19,20 +19,20 @@ else
 <table class="table">
     <thead>
         <tr>
-            @if (this.User.IsInRole("Admin"))
+            @if (this.User.IsInRole("Admin")) // If user is admin
             {
                 <th>
-                    @Html.DisplayNameFor(model => model.User.FullName)
+                    @Html.DisplayNameFor(model => model.User.FullName) @* Display order user full name column. *@
                 </th>
             }
             <th>
-                @Html.DisplayNameFor(model => model.OrderDate)
+                @Html.DisplayNameFor(model => model.OrderDateLocal)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.DeliveryDate)
             </th>
             <th>
-                # Lines
+                @Html.DisplayNameFor(model => model.Lines)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.Quantity)
@@ -49,17 +49,17 @@ else
                 @if (this.User.IsInRole("Admin"))
                 {
                     <th>
-                        @Html.DisplayNameFor(modelItem => item.User.FullName)
+                        @Html.DisplayFor(modelItem => item.User.FullName)
                     </th>
                 }
                 <td>
-                    @Html.DisplayFor(modelItem => item.OrderDate)
+                    @Html.DisplayFor(modelItem => item.OrderDateLocal)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.DeliveryDate)
                 </td>
                 <td>
-                    # Lines
+                    @Html.DisplayFor(modelItem => item.Lines)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Quantity)

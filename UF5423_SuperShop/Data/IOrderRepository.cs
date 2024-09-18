@@ -17,5 +17,6 @@ namespace UF5423_SuperShop.Data
 
         Task DeleteOrderDetailTempAsync(int id);
     
+        Task<bool> ConfirmOrderAsync(string username);
     }
 }

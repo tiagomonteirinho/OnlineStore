@@ -86,5 +86,16 @@ namespace UF5423_SuperShop.Controllers
             await _orderRepository.DeleteOrderDetailTempAsync(id.Value);
             return RedirectToAction("Create");
         }
+
+        public async Task<IActionResult> ConfirmOrder()
+        {
+            var response = await _orderRepository.ConfirmOrderAsync(this.User.Identity.Name);
+            if (response)
+            {
+                return RedirectToAction("Index");
+            }
+
+            return RedirectToAction("Create");
+        }
     }
 }
