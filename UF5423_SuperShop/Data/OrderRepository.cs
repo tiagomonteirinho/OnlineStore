@@ -85,21 +85,21 @@ namespace UF5423_SuperShop.Data
                     Quantity = model.Quantity,
                 };
 
-                _context.OrderDetailsTemp.Add(orderDetailTemp); // Create new item line.
+                _context.OrderDetailsTemp.Add(orderDetailTemp); // Add item to order.
             }
             else // If item exists
             {
                 orderDetailTemp.Quantity += model.Quantity; // Add new quantity to item line.
-                _context.OrderDetailsTemp.Update(orderDetailTemp); // Update item line.
+                _context.OrderDetailsTemp.Update(orderDetailTemp); // Update item.
             }
 
-            await _context.SaveChangesAsync(); // Save to database.
+            await _context.SaveChangesAsync(); // Save changes to database.
         }
 
         public async Task ModifyOrderDetailTempQuantityAsync(int id, double quantity) // Modify item quantity.
         {
             var orderDetailTemp = await _context.OrderDetailsTemp.FindAsync(id);
-            if (orderDetailTemp == null) // If item doesn't exist
+            if (orderDetailTemp == null)
             {
                 return;
             }
@@ -110,6 +110,18 @@ namespace UF5423_SuperShop.Data
                 _context.OrderDetailsTemp.Update(orderDetailTemp);
                 await _context.SaveChangesAsync();
             }
+        }
+
+        public async Task DeleteOrderDetailTempAsync(int id) // Delete item.
+        {
+            var orderDetailTemp = await _context.OrderDetailsTemp.FindAsync(id);
+            if (orderDetailTemp == null)
+            {
+                return;
+            }
+
+            _context.OrderDetailsTemp.Remove(orderDetailTemp); // Remove item from order.
+            await _context.SaveChangesAsync();
         }
     }
 }

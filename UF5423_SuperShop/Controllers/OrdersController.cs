@@ -53,5 +53,38 @@ namespace UF5423_SuperShop.Controllers
 
             return View(model);
         }
+
+        public async Task<IActionResult> IncreaseItemQuantity(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound(); //TODO: Replace by ItemNotFound view.
+            }
+
+            await _orderRepository.ModifyOrderDetailTempQuantityAsync(id.Value, 1); // Get item quantity + 1.
+            return RedirectToAction("Create"); // Refresh/update view.
+        }
+
+        public async Task<IActionResult> DecreaseItemQuantity(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound(); //TODO: Replace by ItemNotFound view.
+            }
+
+            await _orderRepository.ModifyOrderDetailTempQuantityAsync(id.Value, -1); // Get item quantity + (-1).
+            return RedirectToAction("Create");
+        }
+
+        public async Task<IActionResult> DeleteItem(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound(); //TODO: Replace by ItemNotFound view.
+            }
+
+            await _orderRepository.DeleteOrderDetailTempAsync(id.Value);
+            return RedirectToAction("Create");
+        }
     }
 }

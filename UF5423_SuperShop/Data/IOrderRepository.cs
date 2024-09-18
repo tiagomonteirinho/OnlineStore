@@ -14,5 +14,8 @@ namespace UF5423_SuperShop.Data
         Task AddItemToOrderAsync(AddItemViewModel model, string username);
 
         Task ModifyOrderDetailTempQuantityAsync(int id, double quantity); // Sum product quantities if same product is added multiple times.
+
+        Task DeleteOrderDetailTempAsync(int id);
+    
     }
 }
