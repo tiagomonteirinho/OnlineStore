@@ -7,7 +7,7 @@
 
 <p>
     <a asp-action="AddProduct" class="btn btn-success">Add product</a>
-    <a asp-action="ConfirmOrder" class="btn btn-primary">Confirm order</a>
+    <a asp-action="ConfirmOrder" class="btn btn-primary" id="btnConfirm">Confirm order</a>
 </p>
 <table class="table">
     <thead>
@@ -42,12 +42,92 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Value)
                 </td>
-                <td>
-                    <a asp-action="IncreaseItemQuantity" asp-route-id="@item.Id" class="btn btn-warning"><i class="fa fa-plus" /></a>
-                    <a asp-action="DecreaseItemQuantity" asp-route-id="@item.Id" class="btn btn-info"><i class="fa fa-minus" /></a>
-                    <a asp-action="DeleteItem" asp-route-id="@item.Id" class="btn btn-danger">Delete</a>
+                <td id="@item.Id">
+                    <a asp-action="IncreaseItemQuantity" asp-route-id="@item.Id" class="btn btn-warning"><i class="fa fa-plus"></i></a>
+                    <a asp-action="DecreaseItemQuantity" asp-route-id="@item.Id" class="btn btn-info"><i class="fa fa-minus"></i></a>
+                    <a asp-action="DeleteItem" asp-route-id="@item.Id" class="btn btn-danger" id="btnDeleteItem">Delete</a>
                 </td>
             </tr>
         }
     </tbody>
 </table>
+
+<div id="confirmationDialog" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm order</h4>
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to confirm the order?</p>
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-danger" id="btnNoConfirm">No</button>
+                <button type="button" class="btn btn-success" id="btnYesConfirm">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="deletionDialog" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete item</h4>
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to remove the item from the order?</p> @* TODO: Add item ID to paragraph. *@
+            </div>
+            <div class="modal-body">
+                <button type="button" class="btn btn-danger" id="btnNoDelete">No</button>
+                <button type="button" class="btn btn-success" id="btnYesDelete">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () // Await HTML load-up.
+        {
+            var itemId = 0;
+
+            // --Confirmation modal--
+
+            $("#btnConfirm").click(function() 
+            {
+                $("#confirmationDialog").modal("show"); // Show modal.
+                return false; // Prevent action execution.
+            });
+
+            $("#btnNoConfirm").click(function () {
+                $("#confirmationDialog").modal("hide"); // Hide modal.
+                return false;
+            });
+
+            $("#btnYesConfirm").click(function () {
+                window.location.href = "/Orders/ConfirmOrder"; // Execute action.
+            });
+
+            // --Deletion modal--
+
+            $("a[itemId*=btnDeleteItem]").click(function () {
+                debugger;
+                itemId = $(this).parent()[0].itemId;
+                $("#deletionDialog").modal("show");
+                return false;
+            });
+
+            $("#btnNoDelete").click(function () {
+                $("#deletionDialog").modal("hide");
+                return false;
+            });
+
+            $("#btnYesDelete").click(function () {
+                window.location.href = "/Orders/DeleteItem/" + itemId; // Execute action.
+            });
+        });
+    </script>
+}
