@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using UF5423_SuperShop.Data;
@@ -167,11 +168,27 @@ namespace UF5423_SuperShop.Controllers
         // POST: Products/Delete/5
         [HttpPost, ActionName("Delete")] // Set POST process for action Delete.
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id) // Ensure product still exists.
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _productRepository.GetByIdAsync(id);
-            await _productRepository.DeleteAsync(product); //Delete product from data base.
-            return RedirectToAction(nameof(Index));
+            var product = await _productRepository.GetByIdAsync(id); // Ensure product still exists.
+
+            try
+            {
+                //throw new Exception("Test exception");
+                await _productRepository.DeleteAsync(product); //Delete product from data base.
+                return RedirectToAction(nameof(Index));
+            }
+            //catch (Exception ex) // Generic error exception.
+            catch (DbUpdateException ex) // Database update table dependency error exception.
+            {
+                if (ex.InnerException != null && ex.InnerException.Message.Contains("DELETE")) // If exception message contains 'DELETE'
+                {
+                    ViewBag.ErrorTitle = $"Unable to delete product.";
+                    ViewBag.ErrorMessage = $"Product {product.Name} could not be deleted. Please ensure that the product is not being used in any existing orders.</br></br>";
+                }
+
+                return View("Error");
+            }
         }
 
         public IActionResult ProductNotFound()

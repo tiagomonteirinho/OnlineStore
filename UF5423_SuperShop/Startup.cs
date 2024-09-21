@@ -71,12 +71,12 @@ namespace UF5423_SuperShop
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
+                app.UseExceptionHandler("/Errors/Error"); // Default error action. // Moved from HomeController.cs to ErrosController.
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
 
-            app.UseStatusCodePagesWithReExecute("/error/{0}"); // Replace specific error code action views. // Routes defined at HomeController.cs to execute at start up.
+            app.UseStatusCodePagesWithReExecute("/error/{0}"); // Replace specific error code action views. // Originally defined at HomeController.cs to execute at start-up.
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

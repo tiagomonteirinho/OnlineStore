@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Linq;
 using UF5423_SuperShop.Data.Entities;
 
 namespace UF5423_SuperShop.Data
@@ -19,5 +20,20 @@ namespace UF5423_SuperShop.Data
         {
             
         }
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder) // Cascade deletion rule. // Requires DB creation to be set.
+        //{
+        //    var cascadeFKs = modelBuilder.Model // From model
+        //        .GetEntityTypes() // Get all tables
+        //        .SelectMany(t => t.GetForeignKeys()) // Select all foreign keys
+        //        .Where(fk => !fk.IsOwnership && fk.DeleteBehavior == DeleteBehavior.Cascade);
+
+        //    foreach (var fk in cascadeFKs)
+        //    {
+        //        fk.DeleteBehavior = DeleteBehavior.Restrict; // Prevent deletion.
+        //    }
+
+        //    base.OnModelCreating(modelBuilder);
+        //}
     }
 }
