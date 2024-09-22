@@ -18,5 +18,9 @@ namespace UF5423_SuperShop.Data
         Task DeleteOrderDetailTempAsync(int id);
     
         Task<bool> ConfirmOrderAsync(string username);
+
+        Task DeliverOrder(DeliveryViewModel model);
+
+        Task<Order> GetOrderAsync(int id); // Get specific order.
     }
 }
