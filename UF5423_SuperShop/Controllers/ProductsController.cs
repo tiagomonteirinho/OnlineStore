@@ -29,7 +29,7 @@ namespace UF5423_SuperShop.Controllers
         // GET: Products
         public IActionResult Index()
         {
-            return View(_productRepository.GetAll().OrderBy(p => p.Name)); // Unique case of ordering property values.
+            return View(_productRepository.GetAll().OrderBy(p => p.Name)); // Order by entity exclusive property.
         }
 
         // GET: Products/Details/5
@@ -67,19 +67,19 @@ namespace UF5423_SuperShop.Controllers
             if (ModelState.IsValid)
             {
                 var path = string.Empty;
-
                 if (model.ImageFile != null && model.ImageFile.Length > 0) // If model image file exists
                 {
                     path = await _imageHelper.UploadImageAsync(model.ImageFile, "products"); // Upload image file and get path to save to database.
                 }
 
                 var product = _converterHelper.ConvertToProductModel(model, path, true);
-
                 product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
                 await _productRepository.CreateAsync(product);
+
                 //return RedirectToAction("Index"); // Define custom action name.
                 return RedirectToAction(nameof(Index)); // Redirect to products list action.
             }
+
             return View(model); // Keep input changes if model data is invalid.
         }
 
@@ -120,15 +120,14 @@ namespace UF5423_SuperShop.Controllers
                 try
                 {
                     var path = model.ImageUrl;
-
                     if (model.ImageFile != null && model.ImageFile.Length > 0)
                     {
                         path = await _imageHelper.UploadImageAsync(model.ImageFile, "products");
                     }
 
                     var product = _converterHelper.ConvertToProductModel(model, path, false);
-
-                    product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name); // Set product user as posting user.
+                    product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name); // Set product user as current user.
+                    
                     await _productRepository.UpdateAsync(product);
                 }
                 catch (DbUpdateConcurrencyException)
@@ -142,8 +141,10 @@ namespace UF5423_SuperShop.Controllers
                         throw;
                     }
                 }
+
                 return RedirectToAction(nameof(Index));
             }
+
             return View(model);
         }
 

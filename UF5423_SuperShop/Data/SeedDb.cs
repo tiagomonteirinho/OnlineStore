@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using UF5423_SuperShop.Data.Entities;
@@ -29,6 +30,37 @@ namespace UF5423_SuperShop.Data
             await _userHelper.CheckRoleAsync("Admin"); // Create user role if it doesn't exist.
             await _userHelper.CheckRoleAsync("Customer");
 
+            if (!_context.Countries.Any()) // If no country exists
+            {
+                //_context.Countries.Add(new Country
+                //{
+                //    Name = "Portugal",
+                //    Cities = new List<City>
+                //    {
+                //        new City { Name = "Lisbon" },
+                //        new City { Name = "Porto"},
+                //        new City { Name = "Faro"},
+                //        new City { Name = "Coimbra"},
+                //    },
+                //});
+
+                var cities = new List<City> // Create cities.
+                {
+                    new City { Name = "Lisbon" },
+                    new City { Name = "Porto"},
+                    new City { Name = "Faro"},
+                    new City { Name = "Coimbra"},
+                };
+
+                _context.Countries.Add(new Country // Create country.
+                {
+                    Name = "Portugal",
+                    Cities = cities, // Add cities to country.
+                });
+
+                await _context.SaveChangesAsync();
+            }
+
             var user = await _userHelper.GetUserByEmailAsync("admin@supershop.com"); // Define seed user if exists.
             if (user == null) // If user doesn't exist
             {
@@ -38,7 +70,10 @@ namespace UF5423_SuperShop.Data
                     LastName = "Monteirinho",
                     Email = "admin@supershop.com",
                     UserName = "admin@supershop.com",
-                    PhoneNumber = "123456789"
+                    PhoneNumber = "123456789",
+                    Address = "Rua das Flores",
+                    City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault(), // First city found of first country found.
+                    CityId = _context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
                 };
 
                 var result = await _userHelper.AddUserAsync(user, "123456"); // Create user with entity data and password.

@@ -2,6 +2,6 @@
 {
     public interface IEntity // Generic entity interface.
     {
-        int Id { get; set; } // Common property.
+        int Id { get; set; } // Property common to all entities.
     }
 }

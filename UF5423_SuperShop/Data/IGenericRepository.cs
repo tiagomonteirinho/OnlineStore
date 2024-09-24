@@ -5,7 +5,7 @@ namespace UF5423_SuperShop.Data
 {
     public interface IGenericRepository<T> where T : class // Generic entity repository interface. // Does not require instantiation when inherited by other interfaces.
     {
-        IQueryable<T> GetAll(); // List that gets all entities.
+        IQueryable<T> GetAll(); // List all objects of current entity (T).
 
         Task<T> GetByIdAsync(int id);
 
@@ -17,6 +17,6 @@ namespace UF5423_SuperShop.Data
 
         Task<bool> ExistsAsync(int id);
 
-        //Task<bool> SaveAllAsync(); // Defined in respective class.
+        //Task<bool> SaveAllAsync(); // Defined in respective entity class.
     }
 }

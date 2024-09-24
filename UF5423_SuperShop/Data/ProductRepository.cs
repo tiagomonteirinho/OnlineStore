@@ -10,7 +10,7 @@ namespace UF5423_SuperShop.Data
     {
         private readonly DataContext _context;
 
-        public ProductRepository(DataContext context) : base(context)
+        public ProductRepository(DataContext context) : base(context) // Send context to parent (base) to use its methods.
         {
             _context = context;
         }

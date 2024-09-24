@@ -16,18 +16,18 @@ namespace UF5423_SuperShop.Data
 
         public IQueryable<T> GetAll()
         {
-            //return _context.Set<T>().AsNoTracking().OrderBy(e => e.Id); // Order common property values. Define in specific entity controller for unique case.
-            return _context.Set<T>().AsNoTracking();
+            //return _context.Set<T>().AsNoTracking().OrderBy(e => e.Id); // 'OrderBy': order by common property. Define in respective entity controller for exclusive property.
+            return _context.Set<T>().AsNoTracking(); // 'AsNoTracking': disconnect from entities after completion.
         }
 
         public async Task<T> GetByIdAsync(int id)
         {
             return await _context.Set<T>()
-                .AsNoTracking() // 'AsNoTracking': disconnect from entities after completion.
+                .AsNoTracking()
                 .FirstOrDefaultAsync(e => e.Id == id);
         }
 
-        public async Task CreateAsync(T entity) // Bypass method.
+        public async Task CreateAsync(T entity) // Bypass method to separate actions.
         {
             await _context.Set<T>().AddAsync(entity); // Intermediary connection to keep entity in memory before saving to database.
             await SaveAllAsync(); // Add to database.

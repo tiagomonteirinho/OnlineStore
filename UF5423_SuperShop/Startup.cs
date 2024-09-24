@@ -50,8 +50,9 @@ namespace UF5423_SuperShop
             services.AddScoped<IImageHelper, ImageHelper>(); // Instantiated at 'ProductsController' constructor.
             services.AddScoped<IConverterHelper, ConverterHelper>();
 
-            services.AddScoped<IProductRepository, ProductRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>(); // Everytime the products are loaded, create new products and replace the previous ones.
             services.AddScoped<IOrderRepository, OrderRepository>();
+            services.AddScoped<ICountryRepository, CountryRepository>();
 
             services.ConfigureApplicationCookie(cfg =>
             {

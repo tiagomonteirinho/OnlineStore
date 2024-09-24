@@ -16,6 +16,10 @@ namespace UF5423_SuperShop.Data
 
         public DbSet<OrderDetailTemp> OrderDetailsTemp { get; set; }
 
+        public DbSet<Country> Countries { get; set; }
+
+        public DbSet<City> Cities { get; set; }
+
         public DataContext(DbContextOptions<DataContext> options) : base(options)
         {
             
