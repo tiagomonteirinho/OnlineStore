@@ -16,14 +16,14 @@ namespace UF5423_SuperShop.Data.Entities
 
         [Required] // Set as required value.
         [MaxLength(99, ErrorMessage = "The field {0} cannot exceed {1} characters.")] // Set maximum input length and error message.
-        [Display(Name = "Name")]
+        [Display(Name = "Name")] // Set UI name.
         public string Name { get; set; }
 
         [Display(Name = "Price")]
         [DisplayFormat(DataFormatString = "{0:C2}", ApplyFormatInEditMode = false)] // 'DataFormatString': default format. 'ApplyFormatInEditMode': force format in edit mode. 'C': currency.
         public decimal Price { get; set; }
 
-        [Display(Name = "Image")] // Manually set UI name.
+        [Display(Name = "Image")]
         public string ImageUrl { get; set; }
 
         [Display(Name = "Last Purchase")]

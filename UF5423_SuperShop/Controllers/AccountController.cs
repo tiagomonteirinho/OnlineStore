@@ -17,14 +17,14 @@ namespace UF5423_SuperShop.Controllers
             _userHelper = userHelper;
         }
 
-        public IActionResult Login() // Show login view.
+        public IActionResult Login()
         {
-            if (User.Identity.IsAuthenticated)
+            if (User.Identity.IsAuthenticated) // If user is logged in
             {
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home"); // Show home index view.
             }
 
-            return View();
+            return View(); // Show login view.
         }
 
         [HttpPost]
@@ -72,14 +72,14 @@ namespace UF5423_SuperShop.Controllers
                     {
                         FirstName = model.FirstName,
                         LastName = model.LastName,
-                        UserName = model.Username,
+                        UserName = model.Username, // IdentityUser built-in required field.
                         Email = model.Username,
                     };
 
                     var result = await _userHelper.AddUserAsync(user, model.Password);
                     if (result != IdentityResult.Success)
                     {
-                        ModelState.AddModelError(string.Empty, "Could not register user account.");
+                        ModelState.AddModelError(string.Empty, "Could not register user account."); // Show error message at view.
                         return View(model);
                     }
 
@@ -113,7 +113,7 @@ namespace UF5423_SuperShop.Controllers
         public async Task<IActionResult> ChangeUser()
         {
             var user = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
-            var model = new ChangeUserViewModel();
+            var model = new ChangeUserViewModel(); // New user info.
             if (user != null) // If user exists
             {
                 model.FirstName = user.FirstName;

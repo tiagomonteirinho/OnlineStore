@@ -10,7 +10,7 @@ namespace UF5423_SuperShop.Helpers
         {
             return new Product
             {
-                Id = isNew ? 0 : model.Id, // If product is new (for create), set product ID as 0, otherwise (for edit) get product ID.
+                Id = isNew ? 0 : model.Id, // If model is new (for create), set model ID as 0, otherwise (for edit) get model ID.
                 Name = model.Name,
                 Price = model.Price,
                 ImageUrl = path,

@@ -73,7 +73,7 @@ namespace UF5423_SuperShop.Controllers
                 }
 
                 var product = _converterHelper.ConvertToProductModel(model, path, true);
-                product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name);
+                product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name); // Set product user as current user.
                 await _productRepository.CreateAsync(product);
 
                 //return RedirectToAction("Index"); // Define custom action name.

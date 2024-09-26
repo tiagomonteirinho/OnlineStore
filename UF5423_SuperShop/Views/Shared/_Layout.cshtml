@@ -34,6 +34,7 @@
                                 <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <li><a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Users</a></li>
                                     <li><a class="dropdown-item" asp-area="" asp-controller="" asp-action="">Roles</a></li>
+                                    <li><a class="dropdown-item" asp-area="" asp-controller="Countries" asp-action="">Countries</a></li>
                                 </ul>
                             </li>
                         }
@@ -46,9 +47,9 @@
                     <ul class="nav navbar-nav navbar-right"> @* Navbar right. *@
                         @if (this.User.Identity.IsAuthenticated) // If user is logged in
                         {
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a>
-                        </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Orders" asp-action="Index">Orders</a>
+                            </li>
                             <li class="nav-item">
                                 <a class="nav-link text-dark" asp-area="" asp-controller="Account" asp-action="ChangeUser">@this.User.Identity.Name</a>
                             </li>

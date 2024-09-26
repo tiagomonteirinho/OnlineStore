@@ -6,7 +6,7 @@ using UF5423_SuperShop.Data.Entities;
 namespace UF5423_SuperShop.Data
 {
     //public class DataContext : DbContext // 'DbContext': basic context without security.
-    public class DataContext : IdentityDbContext<User> // 'IdentityDbContext': context with user authentication.
+    public class DataContext : IdentityDbContext<User> // 'IdentityDbContext': ASP.NET built-in database context with authentication.
     {
         public DbSet<Product> Products { get; set; } // Property which defines a data table.
 
