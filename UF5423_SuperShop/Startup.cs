@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 using UF5423_SuperShop.Data;
 using UF5423_SuperShop.Data.Entities;
 using UF5423_SuperShop.Helpers;
@@ -36,6 +36,19 @@ namespace UF5423_SuperShop
                 cfg.Password.RequiredLength = 6;
             }
             ).AddEntityFrameworkStores<DataContext>(); // Use simple data context after authentication completion.
+
+            services.AddAuthentication()
+                .AddCookie()
+                .AddJwtBearer(cfg =>
+                {
+                    cfg.TokenValidationParameters = new TokenValidationParameters // Get configuration parameters from 'appsettings.json' to application middleware.
+                    {
+                        ValidIssuer = this.Configuration["Tokens:Issuer"],
+                        ValidAudience = this.Configuration["Tokens:Audience"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(this.Configuration["Tokens:Key"]))
+                    };
+                });
+
 
             services.AddDbContext<DataContext>(cfg =>
             {

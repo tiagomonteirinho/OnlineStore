@@ -24,5 +24,7 @@ namespace UF5423_SuperShop.Helpers
         Task AddUserToRoleAsync(User user, string role);
 
         Task<bool> IsUserInRoleAsync(User user, string role);
+
+        Task<SignInResult> ValidatePasswordAsync(User user, string password); // Only check if user password is correct, not sign in.
     }
 }

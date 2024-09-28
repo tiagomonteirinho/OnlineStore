@@ -1,6 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Security.Claims;
+using System.Text;
 using System.Threading.Tasks;
 using UF5423_SuperShop.Data;
 using UF5423_SuperShop.Data.Entities;
@@ -13,11 +19,13 @@ namespace UF5423_SuperShop.Controllers
     {
         private readonly IUserHelper _userHelper;
         private readonly ICountryRepository _countryRepository;
+        private readonly IConfiguration _configuration;
 
-        public AccountController(IUserHelper userHelper, ICountryRepository countryRepository)
+        public AccountController(IUserHelper userHelper, ICountryRepository countryRepository, IConfiguration configuration)
         {
             _userHelper = userHelper;
             _countryRepository = countryRepository;
+            _configuration = configuration;
         }
 
         public IActionResult Login()
@@ -217,7 +225,49 @@ namespace UF5423_SuperShop.Controllers
                 }
             }
             return this.View(model);
-        } 
+        }
+
+
+        [HttpPost]
+        public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
+        {
+            if (this.ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(model.UserName);
+                if (user != null)
+                {
+                    var result = await _userHelper.ValidatePasswordAsync(user, model.Password);
+                    if (result.Succeeded)
+                    {
+                        var claims = new[] // Create token claims.
+                        {
+                            new Claim(JwtRegisteredClaimNames.Sub, user.Email), // Register user email.
+                            new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()), // Create random guid for registered email.
+                        };
+
+                        var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"])); // Get tokens key from 'appsettings.json' and encrypt it by converting it to UTF8 bytes. // 'SymmetricSecurityKey': encryption method.
+                        var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256); // 'HmacSha256': 256 bit SSL security algorithm.
+                        var token = new JwtSecurityToken // Generate token.
+                        (
+                            _configuration["Tokens:Issuer"],
+                            _configuration["Tokens:Audience"],
+                            claims,
+                            expires: DateTime.UtcNow.AddDays(15),
+                            signingCredentials: credentials
+                        );
+                        var results = new
+                        {
+                            token = new JwtSecurityTokenHandler().WriteToken(token),
+                            expiration = token.ValidTo,
+                        };
+
+                        return this.Created(string.Empty, results);
+                    }
+                }
+            }
+
+            return BadRequest();
+        }
 
         public IActionResult NotAuthorized()
         {
