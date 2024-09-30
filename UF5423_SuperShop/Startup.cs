@@ -63,14 +63,18 @@ namespace UF5423_SuperShop
 
             services.AddTransient<SeedDb>(); // 'AddTransient': Remove object from memory after completion.
 
+            #region Helpers: do not interfere with the database.
             services.AddScoped<IUserHelper, UserHelper>(); // 'AddScoped': Keep object in memory until another of same type is created and replaces it.
             services.AddScoped<IImageHelper, ImageHelper>(); // Instantiated at 'ProductsController' constructor.
             services.AddScoped<IConverterHelper, ConverterHelper>();
             services.AddScoped<IMailHelper, MailHelper>();
+            #endregion
 
+            #region Repositories: interfere with the database.
             services.AddScoped<IProductRepository, ProductRepository>(); // Everytime the products are loaded, create new products and replace the previous ones.
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<ICountryRepository, CountryRepository>();
+            #endregion
 
             services.ConfigureApplicationCookie(cfg =>
             {

@@ -27,8 +27,11 @@
                 </div>
                 <span asp-validation-for="RememberMe" class="text-warning"></span>
             </div>
-            <input type="submit" value="Login" class="btn btn-success" /> @* Execute action of same name as view by default. *@
-            <br /><br />Don't have an account? <a asp-action="Register">Register one</a>.
+            <div class="form-group">
+                <input type="submit" value="Login" class="btn btn-success" /> @* Execute action of same name as view by default. *@
+                <a asp-action="Register" class="bt btn-primary">Sign up</a>
+                <a asp-action="RecoverPassword" class="btn btn-link">Forgot password?</a>
+            </div>
         </form>
     </div>
 </div>

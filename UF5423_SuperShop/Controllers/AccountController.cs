@@ -132,12 +132,12 @@ namespace UF5423_SuperShop.Controllers
                         {
                             userId = user.Id,
                             token = emailToken,
-                        }, 
+                        },
                         protocol: HttpContext.Request.Scheme
                     );
 
-                    Response response = _mailHelper.SendEmail(model.Username, "Account confirmation", $"<h1>Account confirmation</h1>" + $"To confirm your account, please open this link: </br><a href= \"{tokenLink}\">Confirm account</a>");
-                       
+                    Response response = _mailHelper.SendEmail(model.Username, "SuperShop account confirmation", $"<h1>SuperShop account confirmation</h1>" + $"To confirm your account, please open the following link: </br><a href= \"{tokenLink}\">Confirm account</a>");
+
                     if (response.IsSuccessful)
                     {
                         ViewBag.Message = "An account confirmation email has been sent to your email address. Please follow the instructions to verify your email address.";
@@ -247,7 +247,7 @@ namespace UF5423_SuperShop.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model) // Create API token which expires after a defined time period.
+        public async Task<IActionResult> CreateApiToken([FromBody] LoginViewModel model) // Create API token which expires after a defined time period.
         {
             if (this.ModelState.IsValid)
             {
@@ -289,7 +289,7 @@ namespace UF5423_SuperShop.Controllers
 
         public async Task<IActionResult> ConfirmEmail(string userId, string token)
         {
-            if(string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token)) // If parameters are empty or missing
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token)) // If parameters are empty or missing
             {
                 return NotFound();
             }
@@ -307,6 +307,70 @@ namespace UF5423_SuperShop.Controllers
             }
 
             return View();
+        }
+
+        public IActionResult RecoverPassword()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> RecoverPassword(RecoverPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userHelper.GetUserByEmailAsync(model.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "That email address is not registered to any account.");
+                    return View(model);
+                }
+
+                var passwordToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
+                var tokenLink = Url.Action(
+                    "ResetPassword",
+                    "Account",
+                    new { token = passwordToken },
+                    protocol: HttpContext.Request.Scheme
+                );
+
+                Response response = _mailHelper.SendEmail(model.Email, "SuperShop password recovery", $"<h1>SuperShop password recovery</h1>" + $"To reset your password, please open the following link: </br><a href= \"{tokenLink}\">Reset password</a>");
+
+                if (response.IsSuccessful)
+                {
+                    ViewBag.Message = "A password recovery email has been sent to your email address. Please follow the instructions to reset your password.";
+                }
+
+                return View();
+            }
+
+            return View(model);
+        }
+
+        public IActionResult ResetPassword(string token)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            var user = await _userHelper.GetUserByEmailAsync(model.Username);
+            if (user != null)
+            {
+                var result = await _userHelper.ResetPasswordAsync(user, model.Token, model.NewPassword);
+                if(result.Succeeded)
+                {
+                    ViewBag.Message = "Password successfully changed.";
+                    return View();
+                }
+
+                ViewBag.Message = "Unable to reset password.";
+                return View(model);
+            }
+
+            ViewBag.Message = "User not found.";
+            return View(model);
         }
 
         public IActionResult NotAuthorized()
