@@ -25,6 +25,12 @@ namespace UF5423_SuperShop.Helpers
 
         Task<bool> IsUserInRoleAsync(User user, string role);
 
-        Task<SignInResult> ValidatePasswordAsync(User user, string password); // Only check if user password is correct, not sign in.
+        Task<SignInResult> ValidatePasswordAsync(User user, string password); // Validate credentials without signing in.
+
+        Task<string> GenerateEmailConfirmationTokenAsync(User user); // Generate email address confirmation token which expires after confirmation.
+
+        Task<IdentityResult> ConfirmEmailAsync(User user, string token);
+
+        Task<User> GetUserByIdAsync(string userId);
     }
 }

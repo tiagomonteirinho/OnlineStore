@@ -20,12 +20,14 @@ namespace UF5423_SuperShop.Controllers
         private readonly IUserHelper _userHelper;
         private readonly ICountryRepository _countryRepository;
         private readonly IConfiguration _configuration;
+        private readonly IMailHelper _mailHelper;
 
-        public AccountController(IUserHelper userHelper, ICountryRepository countryRepository, IConfiguration configuration)
+        public AccountController(IUserHelper userHelper, ICountryRepository countryRepository, IConfiguration configuration, IMailHelper mailHelper)
         {
             _userHelper = userHelper;
             _countryRepository = countryRepository;
             _configuration = configuration;
+            _mailHelper = mailHelper;
         }
 
         public IActionResult Login()
@@ -95,8 +97,8 @@ namespace UF5423_SuperShop.Controllers
                         Email = model.Username,
                         Address = model.Address,
                         PhoneNumber = model.PhoneNumber,
+                        CityId = model.CityId,
                         City = city,
-                        CityId = city.Id,
                     };
 
                     var result = await _userHelper.AddUserAsync(user, model.Password);
@@ -113,17 +115,33 @@ namespace UF5423_SuperShop.Controllers
                         await _userHelper.AddUserToRoleAsync(user, "Customer"); // Force user addition to role.
                     }
 
-                    var loginViewModel = new LoginViewModel // Create account login view model.
-                    {
-                        UserName = model.Username,
-                        Password = model.Password,
-                        RememberMe = false,
-                    };
+                    //var loginViewModel = new LoginViewModel // Create account login view model.
+                    //{
+                    //    UserName = model.Username,
+                    //    Password = model.Password,
+                    //    RememberMe = false,
+                    //};
 
-                    var result2 = await _userHelper.LoginAsync(loginViewModel); // Login automatically after registration.
-                    if (result2.Succeeded)
+                    //var result2 = await _userHelper.LoginAsync(loginViewModel); // Login automatically after registration.
+
+                    string emailToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user); // Generate email address confirmation token.
+                    string tokenLink = Url.Action( // Execute action when token link is clicked.
+                        "ConfirmEmail", // Action name.
+                        "Account", // Action controller.
+                        new // Action parameters
+                        {
+                            userId = user.Id,
+                            token = emailToken,
+                        }, 
+                        protocol: HttpContext.Request.Scheme
+                    );
+
+                    Response response = _mailHelper.SendEmail(model.Username, "Account confirmation", $"<h1>Account confirmation</h1>" + $"To confirm your account, please open this link: </br><a href= \"{tokenLink}\">Confirm account</a>");
+                       
+                    if (response.IsSuccessful)
                     {
-                        return RedirectToAction("Index", "Home");
+                        ViewBag.Message = "An account confirmation email has been sent to your email address. Please follow the instructions to verify your email address.";
+                        return View(model);
                     }
 
                     ModelState.AddModelError(string.Empty, "Could not log in.");
@@ -229,7 +247,7 @@ namespace UF5423_SuperShop.Controllers
 
 
         [HttpPost]
-        public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model)
+        public async Task<IActionResult> CreateToken([FromBody] LoginViewModel model) // Create API token which expires after a defined time period.
         {
             if (this.ModelState.IsValid)
             {
@@ -247,12 +265,12 @@ namespace UF5423_SuperShop.Controllers
 
                         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Tokens:Key"])); // Get tokens key from 'appsettings.json' and encrypt it by converting it to UTF8 bytes. // 'SymmetricSecurityKey': encryption method.
                         var credentials = new SigningCredentials(key, SecurityAlgorithms.HmacSha256); // 'HmacSha256': 256 bit SSL security algorithm.
-                        var token = new JwtSecurityToken // Generate token.
+                        var token = new JwtSecurityToken // Generate API token.
                         (
                             _configuration["Tokens:Issuer"],
                             _configuration["Tokens:Audience"],
                             claims,
-                            expires: DateTime.UtcNow.AddDays(15),
+                            expires: DateTime.UtcNow.AddDays(15), // Token duration period until expiration.
                             signingCredentials: credentials
                         );
                         var results = new
@@ -267,6 +285,28 @@ namespace UF5423_SuperShop.Controllers
             }
 
             return BadRequest();
+        }
+
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if(string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token)) // If parameters are empty or missing
+            {
+                return NotFound();
+            }
+
+            var user = await _userHelper.GetUserByIdAsync(userId);
+            if (user == null) // If user doesn't exist
+            {
+                return NotFound();
+            }
+
+            var result = await _userHelper.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded) // If token and user don't match
+            {
+                return NotFound();
+            }
+
+            return View();
         }
 
         public IActionResult NotAuthorized()

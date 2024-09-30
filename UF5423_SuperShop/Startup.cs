@@ -27,6 +27,8 @@ namespace UF5423_SuperShop
         {
             services.AddIdentity<User, IdentityRole>(cfg => // Replace 'User' by 'IdentityUser' to use ASP.NET Core built-in user.
             {
+                cfg.Tokens.AuthenticatorTokenProvider = TokenOptions.DefaultAuthenticatorProvider; // Use default token generator.
+                cfg.SignIn.RequireConfirmedEmail = true;
                 cfg.User.RequireUniqueEmail = true;
                 cfg.Password.RequireDigit = false;
                 cfg.Password.RequiredUniqueChars = 0;
@@ -34,8 +36,10 @@ namespace UF5423_SuperShop
                 cfg.Password.RequireLowercase = false;
                 cfg.Password.RequireNonAlphanumeric = false;
                 cfg.Password.RequiredLength = 6;
-            }
-            ).AddEntityFrameworkStores<DataContext>(); // Use simple data context after authentication completion.
+            })
+                .AddDefaultTokenProviders() // Use default token providers for email address confirmation and password recovery.
+                .AddEntityFrameworkStores<DataContext>(); // Use simple data context after authentication completion.
+
 
             services.AddAuthentication()
                 .AddCookie()
@@ -62,6 +66,7 @@ namespace UF5423_SuperShop
             services.AddScoped<IUserHelper, UserHelper>(); // 'AddScoped': Keep object in memory until another of same type is created and replaces it.
             services.AddScoped<IImageHelper, ImageHelper>(); // Instantiated at 'ProductsController' constructor.
             services.AddScoped<IConverterHelper, ConverterHelper>();
+            services.AddScoped<IMailHelper, MailHelper>();
 
             services.AddScoped<IProductRepository, ProductRepository>(); // Everytime the products are loaded, create new products and replace the previous ones.
             services.AddScoped<IOrderRepository, OrderRepository>();

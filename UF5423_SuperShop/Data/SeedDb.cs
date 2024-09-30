@@ -61,17 +61,17 @@ namespace UF5423_SuperShop.Data
                 await _context.SaveChangesAsync();
             }
 
-            var user = await _userHelper.GetUserByEmailAsync("admin@supershop.com"); // Define seed user if exists.
+            var user = await _userHelper.GetUserByEmailAsync("admin.supershop@yopmail.com"); // Define seed user if exists.
             if (user == null) // If user doesn't exist
             {
                 user = new User // Define user entity data.
                 {
                     FirstName = "Tiago",
                     LastName = "Monteirinho",
-                    Email = "admin@supershop.com",
-                    UserName = "admin@supershop.com",
-                    PhoneNumber = "123456789",
-                    Address = "Rua das Flores",
+                    Email = "admin.supershop@yopmail.com",
+                    UserName = "admin.supershop@yopmail.com",
+                    PhoneNumber = "987654321",
+                    Address = "Rua das Flores 34",
                     City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault(), // First city found of first country found.
                     CityId = _context.Countries.FirstOrDefault().Cities.FirstOrDefault().Id,
                 };
@@ -83,6 +83,9 @@ namespace UF5423_SuperShop.Data
                 }
 
                 await _userHelper.AddUserToRoleAsync(user, "Admin");
+
+                var token = await _userHelper.GenerateEmailConfirmationTokenAsync(user); // Generate account confirmation token.
+                await _userHelper.ConfirmEmailAsync(user, token); // Automatically confirm account.
             }
 
             var isInRole = await _userHelper.IsUserInRoleAsync(user, "Admin"); // Ensure user is in role.
