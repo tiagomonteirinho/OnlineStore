@@ -1,7 +1,7 @@
 ﻿@model UF5423_SuperShop.Data.Entities.Product
 
 <div class="row">
-    <div class="col-md-8">
+    <dl class="col-md-8">
         @* Column 1 *@
         <dt class="col-sm-4">
             @Html.DisplayNameFor(model => model.Name)
@@ -39,7 +39,7 @@
         <dd class="col-sm-8">
             @Html.DisplayFor(model => model.Stock)
         </dd>
-    </div>
+    </dl>
     <div class="col-md-4">
         @* Column 2 *@
         @if (!string.IsNullOrEmpty(Model.ImageUrl)) @* If image url exists *@

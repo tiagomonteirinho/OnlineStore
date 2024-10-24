@@ -22,9 +22,9 @@
         </form>
     </div>
     <div class="col-md-4"> @* Column 2 *@
-        @if (!string.IsNullOrEmpty(Model.ImageUrl)) @* If image url exists *@
+        @if (!string.IsNullOrEmpty(Model.ImageFullPath)) @* If image url exists *@
         {
-            <img src="@Url.Content(Model.ImageUrl)" alt="Image" style="width:300px;height:450px;max-width:100%;height:auto" /> @* Get image from path *@ @* 'Content': application path. *@
+            <img src="@Url.Content(Model.ImageFullPath)" alt="Image" style="width:300px;height:450px;max-width:100%;height:auto" /> @* Get image from path *@ @* 'Content': application path. *@
         }
     </div>
 </div>
@@ -32,5 +32,6 @@
 @section Scripts {
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        await Html.RenderPartialAsync("_ValidationCurrencyPartial");
     }
 }

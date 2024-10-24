@@ -137,7 +137,6 @@ namespace UF5423_SuperShop.Controllers
                     );
 
                     Response response = _mailHelper.SendEmail(model.Username, "SuperShop account confirmation", $"<h1>SuperShop account confirmation</h1>" + $"To confirm your account, please open the following link: </br><a href= \"{tokenLink}\">Confirm account</a>");
-
                     if (response.IsSuccessful)
                     {
                         ViewBag.Message = "An account confirmation email has been sent to your email address. Please follow the instructions to verify your email address.";
@@ -244,7 +243,6 @@ namespace UF5423_SuperShop.Controllers
             }
             return this.View(model);
         }
-
 
         [HttpPost]
         public async Task<IActionResult> CreateApiToken([FromBody] LoginViewModel model) // Create API token which expires after a defined time period.
@@ -359,14 +357,14 @@ namespace UF5423_SuperShop.Controllers
             if (user != null)
             {
                 var result = await _userHelper.ResetPasswordAsync(user, model.Token, model.NewPassword);
-                if(result.Succeeded)
+                if(!result.Succeeded) // If token doesn't exist or has expired
                 {
-                    ViewBag.Message = "Password successfully changed.";
-                    return View();
+                    ViewBag.Message = "Unable to reset password.";
+                    return View(model);
                 }
 
-                ViewBag.Message = "Unable to reset password.";
-                return View(model);
+                ViewBag.Message = "Password successfully changed.";
+                return View();
             }
 
             ViewBag.Message = "User not found.";

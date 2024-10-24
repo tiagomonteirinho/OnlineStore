@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Threading.Tasks;
 using UF5423_SuperShop.Data;
 using UF5423_SuperShop.Data.Entities;
 using UF5423_SuperShop.Models;
+using Vereyon.Web;
 
 namespace UF5423_SuperShop.Controllers
 {
@@ -11,15 +13,33 @@ namespace UF5423_SuperShop.Controllers
     public class CountriesController : Controller
     {
         private readonly ICountryRepository _countryRepository;
+        private readonly IFlashMessage _flashMessage;
 
-        public CountriesController(ICountryRepository countryRepository)
+        public CountriesController(ICountryRepository countryRepository, IFlashMessage flashMessage)
         {
             _countryRepository = countryRepository;
+            _flashMessage = flashMessage;
         }
 
         public IActionResult Index()
         {
             return View(_countryRepository.GetCountriesWithCities());
+        }
+
+        public async Task<IActionResult> Details(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var country = await _countryRepository.GetCountryWithCitiesAsync(id.Value);
+            if (country == null)
+            {
+                return NotFound();
+            }
+
+            return View(country);
         }
 
         public IActionResult Create()
@@ -33,8 +53,17 @@ namespace UF5423_SuperShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _countryRepository.CreateAsync(country);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    await _countryRepository.CreateAsync(country);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception)
+                {
+                    _flashMessage.Danger("That country already exists.");
+                }
+
+                return View(country);
             }
 
             return View(country);
@@ -62,24 +91,17 @@ namespace UF5423_SuperShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _countryRepository.UpdateAsync(country);
-                return RedirectToAction(nameof(Index));
-            }
+                try
+                {
+                    await _countryRepository.UpdateAsync(country);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception)
+                {
+                    _flashMessage.Danger("That country already exists.");
+                }
 
-            return View(country);
-        }
-
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var country = await _countryRepository.GetCountryWithCitiesAsync(id.Value);
-            if (country == null)
-            {
-                return NotFound();
+                return View(country);
             }
 
             return View(country);
@@ -132,7 +154,7 @@ namespace UF5423_SuperShop.Controllers
                 return RedirectToAction("Details", new { id = model.CountryId }); // Return to country details.
             }
 
-            return this.View(model);
+            return View(model);
         }
 
         public async Task<IActionResult> EditCity(int? id)
@@ -159,11 +181,11 @@ namespace UF5423_SuperShop.Controllers
                 var countryId = await _countryRepository.UpdateCityAsync(city);
                 if (countryId != 0)
                 {
-                    return this.RedirectToAction("Details", new { id = countryId }); //'new{}': anonymous object that does not require type.
+                    return RedirectToAction("Details", new { id = countryId }); //'new{}': anonymous object that does not require type.
                 }
             }
 
-            return this.View(city);
+            return View(city);
         }
 
         public async Task<IActionResult> DeleteCity(int? id)

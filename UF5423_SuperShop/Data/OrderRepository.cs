@@ -9,7 +9,7 @@ using UF5423_SuperShop.Models;
 
 namespace UF5423_SuperShop.Data
 {
-    public class OrderRepository : GenericRepository<Order>, IOrderRepository // 'IOrderRepository' for instantiation at Startup.cs where dependency injection requires interface before class.
+    public class OrderRepository : GenericRepository<Order>, IOrderRepository // 'GenericRepository' cannot be instantiated (like an abstract class), so also inherit 'IOrderRepository' to be instantiated at Startup.cs where dependency injection requires an interface before class.
     {
         private readonly DataContext _context;
         private readonly IUserHelper _userHelper;

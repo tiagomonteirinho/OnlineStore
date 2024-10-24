@@ -13,7 +13,7 @@ namespace UF5423_SuperShop.Controllers
     //[Authorize] // Prevent access to non-authenticated users. // Replace view with login view and return to previous view after authentication.
     public class ProductsController : Controller
     {
-        private readonly IProductRepository _productRepository;
+        private readonly IProductRepository _productRepository; // Use class interface because dependency injection already gets methods from class.
         private readonly IUserHelper _userHelper;
         private readonly IImageHelper _imageHelper;
         private readonly IConverterHelper _converterHelper;
@@ -72,7 +72,7 @@ namespace UF5423_SuperShop.Controllers
                     path = await _imageHelper.UploadImageAsync(model.ImageFile, "products"); // Upload image file and get path to save to database.
                 }
 
-                var product = _converterHelper.ConvertToProductModel(model, path, true);
+                var product = _converterHelper.ConvertToProduct(model, path, true);
                 product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name); // Set product user as current user.
                 await _productRepository.CreateAsync(product);
 
@@ -125,7 +125,7 @@ namespace UF5423_SuperShop.Controllers
                         path = await _imageHelper.UploadImageAsync(model.ImageFile, "products");
                     }
 
-                    var product = _converterHelper.ConvertToProductModel(model, path, false);
+                    var product = _converterHelper.ConvertToProduct(model, path, false);
                     product.User = await _userHelper.GetUserByEmailAsync(this.User.Identity.Name); // Set product user as current user.
                     
                     await _productRepository.UpdateAsync(product);

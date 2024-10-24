@@ -10,6 +10,7 @@ using System.Text;
 using UF5423_SuperShop.Data;
 using UF5423_SuperShop.Data.Entities;
 using UF5423_SuperShop.Helpers;
+using Vereyon.Web;
 
 namespace UF5423_SuperShop
 {
@@ -63,6 +64,8 @@ namespace UF5423_SuperShop
 
             services.AddTransient<SeedDb>(); // 'AddTransient': Remove object from memory after completion.
 
+            services.AddFlashMessage();
+
             #region Helpers: do not interfere with the database.
             services.AddScoped<IUserHelper, UserHelper>(); // 'AddScoped': Keep object in memory until another of same type is created and replaces it.
             services.AddScoped<IImageHelper, ImageHelper>(); // Instantiated at 'ProductsController' constructor.
@@ -94,10 +97,12 @@ namespace UF5423_SuperShop
             }
             else
             {
-                app.UseExceptionHandler("/Errors/Error"); // Default error action. // Moved from HomeController.cs to ErrosController.
+                app.UseExceptionHandler("/Errors/Error"); // Default error action called here (middleware) to apply to all unhandled exceptions. // Moved from HomeController.cs to ErrorsController.
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            //app.UseDeveloperExceptionPage(); // Show development error views.
 
             app.UseStatusCodePagesWithReExecute("/error/{0}"); // Replace specific error code action views. // Originally defined at HomeController.cs to execute at start-up.
 

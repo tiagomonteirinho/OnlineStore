@@ -61,15 +61,15 @@ namespace UF5423_SuperShop.Data
                 await _context.SaveChangesAsync();
             }
 
-            var user = await _userHelper.GetUserByEmailAsync("admin.supershop@yopmail.com"); // Define seed user if exists.
+            var user = await _userHelper.GetUserByEmailAsync("admin@mail"); // Define seed user if exists.
             if (user == null) // If user doesn't exist
             {
                 user = new User // Define user entity data.
                 {
                     FirstName = "Tiago",
                     LastName = "Monteirinho",
-                    Email = "admin.supershop@yopmail.com",
-                    UserName = "admin.supershop@yopmail.com",
+                    Email = "admin@mail",
+                    UserName = "admin@mail",
                     PhoneNumber = "987654321",
                     Address = "Rua das Flores 34",
                     City = _context.Countries.FirstOrDefault().Cities.FirstOrDefault(), // First city found of first country found.

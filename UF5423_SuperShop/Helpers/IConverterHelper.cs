@@ -5,7 +5,7 @@ namespace UF5423_SuperShop.Helpers
 {
     public interface IConverterHelper
     {
-        Product ConvertToProductModel(ProductViewModel model, string path, bool isNew);
+        Product ConvertToProduct(ProductViewModel model, string path, bool isNew);
 
         ProductViewModel ConvertToProductViewModel(Product product);
     }

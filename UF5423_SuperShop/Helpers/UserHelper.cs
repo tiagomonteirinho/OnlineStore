@@ -18,14 +18,19 @@ namespace UF5423_SuperShop.Helpers
             _roleManager = roleManager;
         }
 
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            return await _userManager.FindByEmailAsync(email);
+        }
+
+        public async Task<User> GetUserByIdAsync(string userId)
+        {
+            return await _userManager.FindByIdAsync(userId);
+        }
+
         public async Task<IdentityResult> AddUserAsync(User user, string password)
         {
             return await _userManager.CreateAsync(user, password);
-        }
-
-        public async Task AddUserToRoleAsync(User user, string role)
-        {
-            await _userManager.AddToRoleAsync(user, role);
         }
 
         public async Task<IdentityResult> ChangePasswordAsync(User user, string oldPassword, string newPassword)
@@ -45,14 +50,9 @@ namespace UF5423_SuperShop.Helpers
             }
         }
 
-        public async Task<User> GetUserByEmailAsync(string email)
+        public async Task AddUserToRoleAsync(User user, string role)
         {
-            return await _userManager.FindByEmailAsync(email);
-        }
-
-        public async Task<User> GetUserByIdAsync(string userId)
-        {
-            return await _userManager.FindByIdAsync(userId);
+            await _userManager.AddToRoleAsync(user, role);
         }
 
         public async Task<bool> IsUserInRoleAsync(User user, string role)

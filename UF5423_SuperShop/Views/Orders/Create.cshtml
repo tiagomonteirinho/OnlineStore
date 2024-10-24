@@ -63,7 +63,7 @@
                 <p>Do you want to confirm the order?</p>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-danger" id="btnconfirmNo">No</button>
+                <button type="button" class="btn btn-danger" id="btnConfirmNo">No</button>
                 <button type="button" class="btn btn-success" id="btnConfirmYes">Yes</button>
             </div>
         </div>
@@ -96,24 +96,25 @@
 
             // --Confirmation modal--
 
-            $("#btnConfirm").click(function() 
+            $("#btnConfirm").click(function() // '#btnConfirm': tag ID. Use when ID is used in only one tag.
             {
                 $("#confirmationDialog").modal("show"); // Show modal.
                 return false; // Prevent action execution.
             });
 
-            $("#btnconfirmNo").click(function () {
+            $("#btnConfirmNo").click(function () {
                 $("#confirmationDialog").modal("hide"); // Hide modal.
                 return false;
             });
 
             $("#btnConfirmYes").click(function () {
-                window.location.href = "/Orders/ConfirmOrder"; // Execute action.
+                window.location.href = "/Orders/ConfirmOrder"; // Execute action from controller location.
             });
 
             // --Deletion modal--
 
-            $("a[id*=btnDeleteItem]").click(function () {
+            $("a[id*=btnDeleteItem]").click(function () // 'a[id*=...]': <a> tag with ID. Use when ID is used in multiple tags.
+            {
                 debugger;
                 id = $(this).parent()[0].id;
                 $("#deletionDialog").modal("show");
@@ -126,7 +127,7 @@
             });
 
             $("#btnDeleteYes").click(function () {
-                window.location.href = "/Orders/DeleteItem/" + id; // Execute action.
+                window.location.href = "/Orders/DeleteItem/" + id;
             });
         });
     </script>

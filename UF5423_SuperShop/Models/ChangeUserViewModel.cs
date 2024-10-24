@@ -32,7 +32,6 @@ namespace UF5423_SuperShop.Models
         [Range(1, int.MaxValue, ErrorMessage = "A city must be selected")]
         public int CityId { get; set; }
 
-
         public IEnumerable<SelectListItem> Countries { get; set; }
 
         public IEnumerable<SelectListItem> Cities { get; set; }

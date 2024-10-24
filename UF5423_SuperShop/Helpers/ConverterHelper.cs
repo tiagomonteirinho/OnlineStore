@@ -6,7 +6,7 @@ namespace UF5423_SuperShop.Helpers
 {
     public class ConverterHelper : IConverterHelper
     {
-        public Product ConvertToProductModel(ProductViewModel model, string path, bool isNew)
+        public Product ConvertToProduct(ProductViewModel model, string path, bool isNew)
         {
             return new Product
             {

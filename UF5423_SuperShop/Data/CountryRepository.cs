@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
@@ -94,14 +95,14 @@ namespace UF5423_SuperShop.Data
 
             list.Insert(0, new SelectListItem
             {
-                Text = "(Select a country...",
+                Text = "(Select a country...)",
                 Value = "0"
             });
 
             return list;
         }
 
-        public IEnumerable<SelectListItem> GetComboCities(int countryId)
+        public IEnumerable<SelectListItem> GetComboCities(int countryId) // Synchronous list because it depends on another list.
         {
             var country = _context.Countries.Find(countryId);
             var list = new List<SelectListItem>();
@@ -115,12 +116,30 @@ namespace UF5423_SuperShop.Data
 
                 list.Insert(0, new SelectListItem
                 {
-                    Text = "(Select a city...",
+                    Text = "(Select a city...)",
                     Value = "0"
                 });
             }
 
             return list;
         }
+
+        //public async Task<IEnumerable<SelectListItem>> GetComboRolesAsync() // Example of an asynchronous list when it is the only list.
+        //{
+        //    var roles = await _roleManager.Roles.ToListAsync();
+        //    var list = roles.Select(r => new SelectListItem
+        //    {
+        //        Text = r.Name,
+        //        Value = r.Name,
+        //    }).OrderBy(i => i.Text).ToList();
+
+        //    list.Insert(0, new SelectListItem
+        //    {
+        //        Text = "(Select a role...)",
+        //        Value = "0"
+        //    });
+
+        //    return list;
+        //}
     }
 }
