@@ -1,0 +1,134 @@
+﻿@model IEnumerable<OnlineStore.Data.Entities.OrderDetailTemp>
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create new order</h2>
+
+<p>
+    <a asp-action="AddProduct" class="btn btn-success">Add product</a>
+    <a asp-action="ConfirmOrder" class="btn btn-primary" id="btnConfirm">Confirm order</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Product.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Value)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Value)
+                </td>
+                <td id="@item.Id">
+                    <a asp-action="IncreaseItemQuantity" asp-route-id="@item.Id" class="btn btn-warning"><i class="fa fa-plus"></i></a>
+                    <a asp-action="DecreaseItemQuantity" asp-route-id="@item.Id" class="btn btn-info"><i class="fa fa-minus"></i></a>
+                    <a asp-action="DeleteItem" asp-route-id="@item.Id" class="btn btn-danger" id="btnDeleteItem">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div id="confirmationDialog" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Confirm order</h4>
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to confirm the order?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnConfirmNo">No</button>
+                <button type="button" class="btn btn-success" id="btnConfirmYes">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="deletionDialog" class="modal fade">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Delete item</h4>
+                <button type="button" class="close" data-dismiss="modal"><i class="fa fa-window-close"></i></button>
+            </div>
+            <div class="modal-body">
+                <p>Do you want to remove the item from the order?</p> @* TODO: Add item ID or Name to paragraph. *@
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" id="btnDeleteYes">Yes</button>
+                <button type="button" class="btn btn-success" id="btnDeleteNo">No</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script type="text/javascript">
+        $(document).ready(function () // Await HTML load-up.
+        {
+            var id = 0;
+
+            // --Confirmation modal--
+
+            $("#btnConfirm").click(function() // '#btnConfirm': tag ID. Use when ID is used in only one tag.
+            {
+                $("#confirmationDialog").modal("show"); // Show modal.
+                return false; // Prevent action execution.
+            });
+
+            $("#btnConfirmNo").click(function () {
+                $("#confirmationDialog").modal("hide"); // Hide modal.
+                return false;
+            });
+
+            $("#btnConfirmYes").click(function () {
+                window.location.href = "/Orders/ConfirmOrder"; // Execute action from controller location.
+            });
+
+            // --Deletion modal--
+
+            $("a[id*=btnDeleteItem]").click(function () // 'a[id*=...]': <a> tag with ID. Use when ID is used in multiple tags.
+            {
+                debugger;
+                id = $(this).parent()[0].id;
+                $("#deletionDialog").modal("show");
+                return false;
+            });
+
+            $("#btnDeleteNo").click(function () {
+                $("#deletionDialog").modal("hide");
+                return false;
+            });
+
+            $("#btnDeleteYes").click(function () {
+                window.location.href = "/Orders/DeleteItem/" + id;
+            });
+        });
+    </script>
+}
